@@ -25,25 +25,52 @@ class Player:
 		self.screen_width = screen_size[0]
 		self.screen_height = screen_size[1]
 
-		self.controls = {"up": pygame.K_UP,
-                    "down": pygame.K_DOWN,
-                    "right": pygame.K_RIGHT,
-                    "left": pygame.K_LEFT,
-                    "dash": pygame.K_k,
+		self.controls = {"up": pygame.K_w,
+                    "down": pygame.K_s,
+                    "right": pygame.K_d,
+                    "left": pygame.K_a,
+                    "roll": pygame.K_SPACE,
                     "esc": pygame.K_ESCAPE}
 		
+		self.roll_speed = 50
+		self.roll_cooldown = 120
+		self.last_roll = 0
 
-	def update(self, dt, keys):
+	def update(self, dt, tick, keys):
+
+		#dt_const = dt * 60
+		#nah fuck that if your game is laggy you're on your own
+
+		self.acc = [0, 0]
+
+
+		#dash
+		if keys[self.controls["roll"]]:
+			if tick - self.last_roll > self.roll_cooldown:
+
+				mx, my = pygame.mouse.get_pos()
+				mouse_dir = [mx - self.screen_width/2, my - self.screen_height/2]
+				normal_mouse_dir = multiply_vec_float(mouse_dir, 1/(mouse_dir[0]**2 + mouse_dir[1]**2)**.5)
+
+				self.acc = add_vecs(self.acc, multiply_vec_float(normal_mouse_dir, self.roll_speed))
+				self.vel = add_vecs(self.vel, multiply_vec_float(normal_mouse_dir, self.roll_speed/300))
+
+				self.last_roll = tick
+
+
 
 		#movement
 		acc_inp = [keys[self.controls["right"]] - keys[self.controls["left"]],
 						keys[self.controls["down"]] - keys[self.controls["up"]]]
-		self.acc = multiply_vec_float(acc_inp, self.acc_scaling)
+		
+		self.acc = add_vecs(self.acc, multiply_vec_float(acc_inp, self.acc_scaling))
 
 		self.vel = add_vecs(self.acc, self.vel)
 		self.vel = multiply_vec_float(self.vel, self.vel_drag)
 
 		self.pos = add_vecs(self.vel, self.pos)
+
+
 
 		#collisions
 		self.hitbox = pygame.Rect(self.pos[0] - self.width/2, self.pos[1] - self.height/2, self.width, self.height)
@@ -60,6 +87,7 @@ class Player:
 			dr = 0 if abs(distance[0]) > abs(distance[1]) else 1
 			if distance[(dr+1)%2] < self.block_width / 2 + self.width / 2:
 				self.pos[dr] =  wall_center[dr] + abs(distance[dr]) / distance[dr] * (self.block_width + (self.width if dr==0 else self.height))/2 
+
 
 
 		#camera

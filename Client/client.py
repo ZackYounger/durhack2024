@@ -27,10 +27,12 @@ clock = pygame.time.Clock()     ## For syncing the FPS
 ## Game loop
 running = True
 dt = 0
+tick = 0
 while running:
 
     #1 Process input/events
     dt = clock.tick(FPS)     ## will make the loop run at the same speed all the time
+    tick += 1
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():        # gets all the events which have occured till now and keeps tab of them.
         ## listening for the the X button at the top
@@ -39,7 +41,7 @@ while running:
 
     screen.fill((0, 0, 0))
 
-    player.update(dt, keys)
+    player.update(dt, tick, keys)
 
     level.draw(screen, player.camera_scroll)
 
