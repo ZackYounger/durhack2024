@@ -9,7 +9,7 @@ screen_height = 720
 FPS = 60
 
 level = Level()
-level.create_new_level(21)
+level.create_new_level(41)
 border_walls = level.get_border_walls()
 print(border_walls)
 block_width = level.block_width

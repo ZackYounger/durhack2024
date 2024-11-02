@@ -83,7 +83,6 @@ class Player:
 			wall_center = [wall[0] + self.block_width/2, wall[1] + self.block_width/2]
 			distance = add_vecs(self.pos, [-wall_center[0], -wall_center[1]])
 			#decide which direction to fix
-			print(distance)
 			dr = 0 if abs(distance[0]) > abs(distance[1]) else 1
 			if distance[(dr+1)%2] < self.block_width / 2 + self.width / 2:
 				self.pos[dr] =  wall_center[dr] + abs(distance[dr]) / distance[dr] * (self.block_width + (self.width if dr==0 else self.height))/2 

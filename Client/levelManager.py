@@ -1,15 +1,17 @@
 import pygame
 
 from random import choice
+from perlin_noise import PerlinNoise
+from time import time
 
 from helpers import add_vecs, multiply_vec_float
 
 class Level:
 
     def __init__(self):
-        self.block_width = 50
+        self.block_width = 20
 
-    def create_new_level(self, size):
+    def old_create_new_level(self, size):
 
 
         #make size odd
@@ -35,6 +37,30 @@ class Level:
             for direction in dirs:
                 temp_loc = add_vecs(pos, direction)
                 self.level[temp_loc[1]][temp_loc[0]] = 0
+
+
+    def create_new_level(self, size):
+
+        level_openness = .05
+
+        seed = time()
+
+        #make size odd
+        size = size if size % 2 == 1 else size + 1
+        middle = (size - 1) / 2
+
+        self.level = [[1 for i in range(size)] for j in range(size)]
+        self.size = size
+
+        noise = PerlinNoise()
+
+        max_distance_to_center = (size - 1) / 2
+        for y in range(size):
+            for x in range(size):
+                dist_to_center = ((middle - y)**2 + (middle - x**2))**.5
+                if noise([(x+seed/10)/15,(y+seed/10)/15]) > level_openness:
+                    self.level[y][x] = 0
+
 
 
     #Danial you lazy fuck
