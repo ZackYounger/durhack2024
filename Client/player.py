@@ -1,12 +1,14 @@
 import pygame
 
 from helpers import multiply_vec_float, add_vecs
-
+from laser import Laser
 
 class Player:
 
-	def __init__(self, screen_size, border_walls, block_width):
+	def __init__(self, screen_size, border_walls, block_width, playerID=0):
 		
+		self.playerID = playerID
+
 		self.pos = [0,0]
 		self.vel = [0, 0]
 		self.acc = [0, 0]
@@ -29,6 +31,7 @@ class Player:
                     "down": pygame.K_s,
                     "right": pygame.K_d,
                     "left": pygame.K_a,
+                    "shoot":pygame.K_x,
                     "roll": pygame.K_SPACE,
                     "esc": pygame.K_ESCAPE}
 		
@@ -38,7 +41,7 @@ class Player:
 
 		self.laser_speed = 1
 		self.shoot_cooldown = 60
-		self.last_roll = 0
+		self.last_shoot = 0
 		self.lasers = []
 
 	def update(self, dt, tick, keys):
@@ -71,10 +74,9 @@ class Player:
 		if keys[self.controls["shoot"]]:
 			if tick - self.last_shoot > self.shoot_cooldown:
 
-				self.acc = add_vecs(self.acc, multiply_vec_float(normal_mouse_dir, self.roll_speed))
-				self.vel = add_vecs(self.vel, multiply_vec_float(normal_mouse_dir, self.roll_speed/300))
+				self.lasers.append( Laser(self.pos, normal_mouse_dir, self.playerID) )
 
-				self.last_roll = tick
+				self.last_shoot = tick
 
 
 
@@ -113,13 +115,41 @@ class Player:
 		self.camera_scroll[1] += (self.pos[1] - self.camera_scroll[1] - self.screen_height/2) / self.camera_scroll_speed
 
 
+		#I shouldnt be doing this here but I am loosing my will to live
+		for laser in self.lasers:
+			#move the lasers
+			death_time = laser.update()
+
+			#check if ouch
+			if self.hitbox.colliderect(laser.hitbox) and laser.alive_time > 15:
+				self.take_damage(laser.damage)
+				laser.hit_player(self.playerID)
+
+			#check if laser hits walls
+			if len(laser.hitbox.collidelistall(self.border_walls)) > 0:
+				self.lasers.remove(laser)
+
+
+
+	def take_damage(self, amount):
+		print('OUCH! FUCK SHIT OOWWW THA TFUCKING HURTS')
+
+
 
 	def draw(self, screen):
 		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
 						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
 		pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])
 
-		for wall in self.border_walls:
-			
-			draw_pos = [wall[0] + 1 - self.camera_scroll[0] , wall[1] + 1 - self.camera_scroll[1]]
-			pygame.draw.rect(screen, (55,100,155), [*draw_pos, self.block_width - 2, self.block_width - 2])
+		#for wall in self.border_walls:
+		#	
+		#	draw_pos = [wall[0] + 1 - self.camera_scroll[0] , wall[1] + 1 - self.camera_scroll[1]]
+		#	pygame.draw.rect(screen, (55,100,155), [*draw_pos, self.block_width - 2, self.block_width - 2])
+
+		#I shouldnt be doing this here but I am loosing my will to live
+		for laser in self.lasers:
+			laser.draw(screen, self.camera_scroll)
+
+
+
+
