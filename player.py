@@ -48,35 +48,21 @@ class Player:
 		#collisions
 		self.hitbox = pygame.Rect(self.pos[0] - self.width/2, self.pos[1] - self.height/2, self.width, self.height)
 
-
-		"""
-		match len(border_walls):
-			case 1:
-				data = [[0]*2]*2
-				data[0][0] = border_walls[0][0] * block_width + self.width/2 - self.pos[0]
-				data[0][0] = self.pos[0] - border_walls[0][0] - self.width/2
-
-
-			# this is lazy and depends on the level never generating "floating diagonals"
-			case 2:
-		"""
-		#while (wall_collisions := self.hitbox.collidelistall(border_walls)):
-		#	wall_pos = 
-
-		#gets lists of indices of collisions
-
-
-
+		#need to fix wall collisions
 		wall_collisions = self.hitbox.collidelistall(self.border_walls)
 
 		for wallIndex in wall_collisions:
 			wall = self.border_walls[wallIndex]
 			wall_center = [wall[0] + self.block_width/2, wall[1] + self.block_width/2]
-			distance = add_vecs(self.pos, [-wall.x, -wall.y])
+			distance = add_vecs(self.pos, [-wall_center[0], -wall_center[1]])
 			#decide which direction to fix
-			dr = 0 if distance[0] > distance[1] else 1
-			self.pos[dr] += -1 * abs(distance[dr]) / distance[dr] * (self.block_width/2  - distance[dr])
+			print(distance)
+			dr = 0 if abs(distance[0]) > abs(distance[1]) else 1
+			if distance[(dr+1)%2] < self.block_width / 2 + self.width / 2:
+				self.pos[dr] =  wall_center[dr] + abs(distance[dr]) / distance[dr] * (self.block_width + (self.width if dr==0 else self.height))/2 
 
+
+		#camera
 		self.camera_scroll[0] += (self.pos[0] - self.camera_scroll[0] - self.screen_width/2) / self.camera_scroll_speed
 		self.camera_scroll[1] += (self.pos[1] - self.camera_scroll[1] - self.screen_height/2) / self.camera_scroll_speed
 
