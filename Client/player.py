@@ -36,6 +36,11 @@ class Player:
 		self.roll_cooldown = 120
 		self.last_roll = 0
 
+		self.laser_speed = 1
+		self.shoot_cooldown = 60
+		self.last_roll = 0
+		self.lasers = []
+
 	def update(self, dt, tick, keys):
 
 		#dt_const = dt * 60
@@ -44,13 +49,27 @@ class Player:
 		self.acc = [0, 0]
 
 
+		#mouse shenanigans
+		mx, my = pygame.mouse.get_pos()
+		mouse_dir = [mx - self.screen_width/2, my - self.screen_height/2]
+		normal_mouse_dir = multiply_vec_float(mouse_dir, 1/(mouse_dir[0]**2 + mouse_dir[1]**2)**.5)
+
+
+
 		#dash
 		if keys[self.controls["roll"]]:
 			if tick - self.last_roll > self.roll_cooldown:
 
-				mx, my = pygame.mouse.get_pos()
-				mouse_dir = [mx - self.screen_width/2, my - self.screen_height/2]
-				normal_mouse_dir = multiply_vec_float(mouse_dir, 1/(mouse_dir[0]**2 + mouse_dir[1]**2)**.5)
+				self.acc = add_vecs(self.acc, multiply_vec_float(normal_mouse_dir, self.roll_speed))
+				self.vel = add_vecs(self.vel, multiply_vec_float(normal_mouse_dir, self.roll_speed/300))
+
+				self.last_roll = tick
+
+
+
+		#shoot
+		if keys[self.controls["shoot"]]:
+			if tick - self.last_shoot > self.shoot_cooldown:
 
 				self.acc = add_vecs(self.acc, multiply_vec_float(normal_mouse_dir, self.roll_speed))
 				self.vel = add_vecs(self.vel, multiply_vec_float(normal_mouse_dir, self.roll_speed/300))

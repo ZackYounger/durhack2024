@@ -42,6 +42,7 @@ class Level:
     def create_new_level(self, size):
 
         level_openness = .05
+        freq = 10
 
         seed = time()
 
@@ -57,8 +58,9 @@ class Level:
         max_distance_to_center = (size - 1) / 2
         for y in range(size):
             for x in range(size):
-                dist_to_center = ((middle - y)**2 + (middle - x**2))**.5
-                if noise([(x+seed/10)/15,(y+seed/10)/15]) > level_openness:
+                dist_to_center = ((middle - y)**2 + (middle - x)**2)**.5
+
+                if noise([(x+seed/10)/freq,(y+seed/10)/freq]) > -.05 + (dist_to_center / max_distance_to_center)**20: #+ ((dist_to_center / max_distance_to_center)**4)*1.5:
                     self.level[y][x] = 0
 
 
