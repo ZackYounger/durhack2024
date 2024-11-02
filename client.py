@@ -5,7 +5,7 @@ from player import Player
 
 screen_width = 1080
 screen_height = 720
-FPS = 30
+FPS = 60
 
 player = Player([screen_width/2, screen_height/2])
 
@@ -24,6 +24,7 @@ while running:
 
     #1 Process input/events
     dt = clock.tick(FPS)     ## will make the loop run at the same speed all the time
+    keys = pygame.key.get_pressed()
     for event in pygame.event.get():        # gets all the events which have occured till now and keeps tab of them.
         ## listening for the the X button at the top
         if event.type == pygame.QUIT:
