@@ -1,7 +1,7 @@
 import pygame
 
 from helpers import multiply_vec_float, add_vecs
-
+from laser import Laser
 
 class Player:
 
@@ -29,6 +29,7 @@ class Player:
                     "down": pygame.K_s,
                     "right": pygame.K_d,
                     "left": pygame.K_a,
+                    "shoot" : pygame.K_x,
                     "roll": pygame.K_SPACE,
                     "esc": pygame.K_ESCAPE}
 		
@@ -36,9 +37,10 @@ class Player:
 		self.roll_cooldown = 120
 		self.last_roll = 0
 
+		self.lasers = []
 		self.laser_speed = 1
 		self.shoot_cooldown = 60
-		self.last_roll = 0
+		self.last_shoot = 0
 		self.lasers = []
 
 	def update(self, dt, tick, keys):
@@ -71,10 +73,9 @@ class Player:
 		if keys[self.controls["shoot"]]:
 			if tick - self.last_shoot > self.shoot_cooldown:
 
-				self.acc = add_vecs(self.acc, multiply_vec_float(normal_mouse_dir, self.roll_speed))
-				self.vel = add_vecs(self.vel, multiply_vec_float(normal_mouse_dir, self.roll_speed/300))
+				self.lasers.append(Laser(self.pos, normal_mouse_dir))
 
-				self.last_roll = tick
+				self.last_shoot = tick
 
 
 
@@ -113,13 +114,31 @@ class Player:
 		self.camera_scroll[1] += (self.pos[1] - self.camera_scroll[1] - self.screen_height/2) / self.camera_scroll_speed
 
 
+		#we are updating lasers here because i want to kill myslef
+		for laser in self.lasers:
+			laser.update()
+
 
 	def draw(self, screen):
+
+		#player drawing
 		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
 						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
 		pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])
 
+		#temp!!
 		for wall in self.border_walls:
-			
 			draw_pos = [wall[0] + 1 - self.camera_scroll[0] , wall[1] + 1 - self.camera_scroll[1]]
 			pygame.draw.rect(screen, (55,100,155), [*draw_pos, self.block_width - 2, self.block_width - 2])
+
+
+
+		#we are drawning lasers here because i want to kill myslef
+		for laser in self.lasers:
+			laser.draw(screen)
+
+
+
+
+
+
