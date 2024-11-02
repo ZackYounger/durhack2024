@@ -2,12 +2,16 @@ import pygame
 import random
 
 from player import Player
+from levelManager import Level
 
 screen_width = 1080
 screen_height = 720
 FPS = 60
 
-player = Player([screen_width/2, screen_height/2])
+player = Player([screen_width, screen_height])
+level = Level()
+level.create_new_level(21)
+
 
 ## initialize pygame and create window
 pygame.init()
@@ -34,9 +38,9 @@ while running:
 
     player.update(dt, keys)
 
+    level.draw(screen, player.camera_scroll)
+
     player.draw(screen)
-
-
 
     ## Done after drawing everything to the screen
     pygame.display.flip()       
