@@ -1,49 +1,39 @@
 import socket
 from _thread import *
-from json import dumps
+from json import dumps, loads
 import sys
-
-server = "10.247.180.48"
-print(server)
-port = 8000
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-test_dump = {"hello": "WORLD"}
-
-try:
-    s.bind((server, port))
-except socket.error as e:
-    str(e)
-
-s.listen(2)
-print("Waiting for a connection, Server Started")
 
 
 def threaded_client(conn):
-    conn.send(str.encode(dumps(test_dump)))
-    reply = ""
-    while True:
-        try:
-            data = conn.recv(512)
-            reply = data.decode("utf-8")
+  conn.send(str.encode(dumps("test_dump")))
+  reply = ""
+  while True:
+    try:
+      data = conn.recv(2048 * 16)
+      reply = loads(data.decode("utf-8"))
+      conn.sendall(str.encode(dumps(reply)))
+    except:
+        break
 
-            if not data:
-                #print("Disconnected")
-                break
-            else:
-                print("Received: ", reply)
-                print("Sending : ", reply)
+  conn.close()
 
-            conn.sendall(str.encode(reply))
-        except:
-            break
+def start_server():
+  server = socket.gethostbyname(socket.gethostname())
+  print(server)
+  port = 8000
 
-    print("Lost connection")
-    conn.close()
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-while True:
+  try:
+    s.bind((server, port))
+  except socket.error as e:
+    str(e)
+
+  s.listen(2)
+  print("Waiting for a connection, Server Started")
+    
+  while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
 

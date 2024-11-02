@@ -1,7 +1,7 @@
-import configparser
 import socket
-from json import loads
+from json import loads, dumps
 from time import time
+
 
 
 
@@ -11,24 +11,29 @@ class Network:
     self.server = ip
     self.port = 8000
     self.addr = (self.server, self.port)
-    self.id = self.connect()
+    self.connected = self.connect()
 
   def connect(self):
     try:
       self.client.connect(self.addr)
-      return loads(self.client.recv(512).decode())
-    except:
-      pass
-      
-  def ping(self, data):
-    try:
-      self.client.send(str.encode(data))
-      return self.client.recv(512).decode()
+      connect_msg = self.client.recv(2048 * 16).decode()
+      if connect_msg == "True":
+        return True
+      else:
+        raise Exception("No Connection")
+        return False
     except socket.error as e:
       print(e)
+      
 
-n = Network("10.247.180.48")
-lastping = time()
-while True:
-  print(n.ping(str(time() - lastping)))
-  lastping = time()
+
+  def ping(self, data):
+    try:
+      if self.connected:
+        self.client.send(str.encode(dumps(data)))
+        return loads(self.client.recv(2048 * 16).decode())
+      else:
+        raise Exception("No Connection")
+    except socket.error as e:
+      print(e)
+  
