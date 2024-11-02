@@ -1,13 +1,15 @@
 import socket
 from _thread import *
+from json import dumps
 import sys
 
-server = "ImmenseRoastedStarfish"
+server = "10.247.180.48"
 print(server)
 port = 8000
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+test_dump = {"hello": "WORLD"}
 
 try:
     s.bind((server, port))
@@ -19,15 +21,15 @@ print("Waiting for a connection, Server Started")
 
 
 def threaded_client(conn):
-    conn.send(str.encode("Connected"))
+    conn.send(str.encode(dumps(test_dump)))
     reply = ""
     while True:
         try:
-            data = conn.recv(2048)
+            data = conn.recv(512)
             reply = data.decode("utf-8")
 
             if not data:
-                print("Disconnected")
+                #print("Disconnected")
                 break
             else:
                 print("Received: ", reply)
