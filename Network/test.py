@@ -8,12 +8,14 @@ host = "169.254.131.250"
 
 start_new_thread(start_server, ())
 
-first = Network(host)
-second = Network(host)
+first = Network(host, {"player-id": 0, "x": 10, "y": 5})
+second = Network(host, {"player-id": 1, "x": 25, "y": 5})
+third = Network(host, {"player-id": 2, "x": 10, "y": 15})
+fourth = Network(host, {"player-id": 3, "x": 25, "y": 15})
 
 while True:
-  print(first.ping("ping1"))
+  print(first.ping({"player-id": 0, "x": 10, "y": 5}))
   sleep(1.5)
-  print(second.ping("2_ping"))
+  print(second.ping({"player-id": 1, "x": 10, "y": 5}))
   sleep(1.5)
-  print(second.ping("3_ping"))
+  print(second.ping({"player-id": 1, "x": 10, "y": 5}))
