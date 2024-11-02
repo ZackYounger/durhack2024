@@ -17,7 +17,7 @@ level.create_new_level(21)
 pygame.init()
 pygame.mixer.init()  ## For sound
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("<Your game>")
+pygame.display.set_caption("Hello There")
 clock = pygame.time.Clock()     ## For syncing the FPS
 
 
