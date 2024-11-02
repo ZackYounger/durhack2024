@@ -1,5 +1,9 @@
+import configparser
 import socket
 from json import loads
+from time import time
+
+
 
 class Network:
   def __init__(self, ip):
@@ -22,3 +26,9 @@ class Network:
       return self.client.recv(512).decode()
     except socket.error as e:
       print(e)
+
+n = Network("10.247.180.48")
+lastping = time()
+while True:
+  print(n.ping(str(time() - lastping)))
+  lastping = time()
