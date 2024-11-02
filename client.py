@@ -8,10 +8,13 @@ screen_width = 1080
 screen_height = 720
 FPS = 60
 
-player = Player([screen_width, screen_height])
 level = Level()
 level.create_new_level(21)
+border_walls = level.get_border_walls()
+print(border_walls)
+block_width = level.block_width
 
+player = Player([screen_width, screen_height], border_walls, block_width)
 
 ## initialize pygame and create window
 pygame.init()

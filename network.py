@@ -24,4 +24,4 @@ class Network:
         except socket.error as e:
             print(e)
 
-n = Network("Laptop-of-DG")
+n = Network("10.247.180.48")
