@@ -7,8 +7,11 @@ import sys
 def threaded_client(conn, collective_data, index=None):
   conn.send(str.encode("True"))
   data = loads(conn.recv(2048 * 16).decode("utf-8"))
+  if index:
+    data["player-id"] = index[-1]
   collective_data["player" + str(data["player-id"])] = data
   reply = ""
+  print(collective_data)
   while True:
     try:
       data = conn.recv(2048 * 16)
@@ -40,6 +43,8 @@ def start_server(collective_data):
     conn, addr = s.accept()
     print("Connected to:", addr)
     for i in collective_data:
+      print(i, collective_data[i])
       if not collective_data[i]:
         index = i
+        break
     start_new_thread(threaded_client, (conn, collective_data, index))
