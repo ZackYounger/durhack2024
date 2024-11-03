@@ -136,7 +136,7 @@ class MainMenu:
                     if self.back_button.draw(screen): 
                         self.menu_state = "main"
                     
-                    player1_rect = pygame.Rect(600 * (108 / 80), 0, 150, 100) 
+                    player1_rect = pygame.Rect(150 * (108 / 80), 150, 175, 50) 
                     if not start_server_once[0]:
                       player1_server = gethostbyname(gethostname())
                       connect.init_server()
@@ -147,7 +147,7 @@ class MainMenu:
                     p1_serv = self.rec_font.render(player1_server, True, (255, 255, 255))
                     name_display = self.rec_font.render(self.user_name1, True, (255, 255, 255))
                     
-                    pygame.draw.rect(screen, (255, 0, 255), player1_rect)
+                    pygame.draw.rect(screen, (0, 0, 0), player1_rect)
                     screen.blit(name_display, player1_rect.topleft)
                     screen.blit(p1_serv, (SCREEN_WIDTH * 0.42, SCREEN_HEIGHT * 0.05))
 
