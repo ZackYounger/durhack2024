@@ -3,8 +3,10 @@ import random
 
 from Network.network import Network
 
-from Client.helpers import multiply_vec_float, add_vecs
 from Client.laser import Laser
+from spritesheet import Spritesheet
+
+from Client.helpers import multiply_vec_float, add_vecs
 
 player_colours = [
 	(0, 51, 204),
@@ -30,6 +32,8 @@ class Player:
 		self.height = 25
 		self.acc_scaling = 1
 		self.vel_drag = .8
+
+		self.spritesheet = 
 
 		self.camera_scroll_speed = 20
 		self.camera_scroll = [0, 0]
@@ -57,8 +61,8 @@ class Player:
 		self.last_shoot = 0
 		self.lasers = []
 
-		#other_players = [0,1,2,3].remove(playerID)
-		#self.kill_order = random.shuffle(other_players)
+		other_players = [0,1,2,3].remove(playerID)
+		self.kill_order = random.shuffle(other_players)
 
 
 
