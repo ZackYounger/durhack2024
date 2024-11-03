@@ -42,7 +42,7 @@ class Level:
     def create_new_level(self, size):
 
         level_openness = .05
-        freq = 10
+        freq = 20
 
         seed = time()
 
@@ -60,7 +60,7 @@ class Level:
             for x in range(size):
                 dist_to_center = ((middle - y)**2 + (middle - x)**2)**.5
 
-                if noise([(x+seed/10)/freq,(y+seed/10)/freq]) > -.05 + (dist_to_center / max_distance_to_center)**20: #+ ((dist_to_center / max_distance_to_center)**4)*1.5:
+                if noise([(x+seed/10)/freq,(y+seed/10)/freq]) > -.1 + (dist_to_center / max_distance_to_center)**20: #+ ((dist_to_center / max_distance_to_center)**4)*1.5:
                     self.level[y][x] = 0
 
 
@@ -102,4 +102,11 @@ class Level:
                     screen_pos = [(x - self.size / 2) * self.block_width,
                                     (y - self.size / 2) * self.block_width]
                     draw_pos = [screen_pos[0] + 1 - camera_scroll[0] , screen_pos[1] + 1 - camera_scroll[1]]
-                    pygame.draw.rect(screen, (255,0,255) if (x,y) in self.border_walls else (255,0,0), [*draw_pos, self.block_width - 2, self.block_width - 2])
+                    #if (x,y) in self.border_walls:
+                    #pygame.draw.rect(screen, (255,0,255) if (x,y) in self.border_walls else (255,0,0), [*draw_pos, self.block_width - 2, self.block_width - 2])
+
+
+
+
+
+
