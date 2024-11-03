@@ -31,10 +31,7 @@ class Player:
 		self.acc_scaling = 1
 		self.vel_drag = .8
 
-<<<<<<< HEAD
 		self.animationHandler = AnimationHandler('loki')
-=======
->>>>>>> 19cb1f433555d948aedf1cf79f0fd534be249e3f
 
 		self.camera_scroll_speed = 20
 		self.camera_scroll = [0, 0]
