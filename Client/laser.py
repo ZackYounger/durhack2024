@@ -21,7 +21,7 @@ class Laser:
 
 		self.damage = 20
 
-		self.shot_by = playerID
+		self.playerID = playerID
 
 		self.alive_time = 0
 
@@ -40,7 +40,7 @@ class Laser:
 
 
 
-	def draw(self, screen, camera_scroll):
+	def draw(self, screen, camera_scroll, player_colours):
 
 		#i know i know, i dont know why but it lags behind without this :((((
 		self.hitbox = pygame.Rect(self.pos[0] - self.radius/2, self.pos[1] - self.radius/2, self.radius, self.radius)
@@ -50,7 +50,8 @@ class Laser:
 		pygame.draw.circle(screen, (255,255,255), draw_pos, self.radius)
 		screen.blit(circle_surface(self.radius*2, (100,100,100)), sub_vecs(draw_pos, [self.radius*2, self.radius*2]), special_flags=BLEND_RGB_ADD)
 
-		pygame.draw.rect(screen, (255,0 ,0), [self.hitbox[0] - camera_scroll[0], self.hitbox[1] - camera_scroll[1], self.hitbox[2], self.hitbox[3]])
+		#draw the hitbox because i am mentally ill
+		#pygame.draw.rect(screen, player_colours[self.playerID], [self.hitbox[0] - camera_scroll[0], self.hitbox[1] - camera_scroll[1], self.hitbox[2], self.hitbox[3]])
 
 
 

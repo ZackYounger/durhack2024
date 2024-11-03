@@ -3,6 +3,16 @@ import pygame
 from helpers import multiply_vec_float, add_vecs
 from laser import Laser
 
+player_colours = [
+	(0, 51, 204),
+	(255, 51, 51),
+	(255, 235, 20),
+	(0, 153, 51)
+
+]
+
+dulled_player_colours = [[j/2 for j in colour] for colour in player_colours]
+print(dulled_player_colours)
 class Player:
 
 	def __init__(self, screen_size, border_walls, block_width, playerID=0):
@@ -43,6 +53,10 @@ class Player:
 		self.shoot_cooldown = 60
 		self.last_shoot = 0
 		self.lasers = []
+
+		other_players = [0,1,2,3].remove(playerID)
+		self.kill_order = random.shuffle(other_players)
+
 
 	def update(self, dt, tick, keys):
 
@@ -148,7 +162,7 @@ class Player:
 
 		#I shouldnt be doing this here but I am loosing my will to live
 		for laser in self.lasers:
-			laser.draw(screen, self.camera_scroll)
+			laser.draw(screen, self.camera_scroll, dulled_player_colours)
 
 
 
