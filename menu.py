@@ -101,8 +101,12 @@ class MainMenu:
                         if event.type == pygame.KEYDOWN :
                             if event.key:
                                 self.network = Network(self.server_address, {})
+
+                                # fail to connect
                                 if not self.network.connected:
                                     pass
+
+                                # connected, go to waiting page
                                 else:
                                     pass
                             if event.key == pygame.K_BACKSPACE :
