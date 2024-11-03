@@ -44,19 +44,19 @@ class MainMenu:
         self.audio_img = pygame.image.load('Assets/Buttons/button_audio.png').convert_alpha()
         self.keys_img = pygame.image.load('Assets/Buttons/button_keys.png').convert_alpha()
         self.back_img = pygame.image.load('Assets/Buttons/button_back.png').convert_alpha()
-        self.f1_img = pygame.image.load('images/sq/x/f1.png').convert_alpha()
-        self.f2_img = pygame.image.load('images/sq/x/f2.png').convert_alpha()
+        self.join_img = pygame.image.load('Assets/Buttons/join_button.png').convert_alpha()
+        self.create_img = pygame.image.load('Assets/Buttons/craete_button.png').convert_alpha()
 
         # Create button instances
-        self.start_button = button.Button(304 * (1080 / 800), 125 * (72 / 60), self.resume_img, 1)
-        self.options_button = button.Button(297 * (1080 / 800), 250 * (72 / 60), self.options_img, 1)
-        self.quit_button = button.Button(336 * (1080 / 800), 375 * (72 / 60), self.quit_img, 1)
+        self.start_button = button.Button(310 * (1080 / 800), 60 * (72 / 60), self.resume_img, 1)
+        self.options_button = button.Button(297 * (1080 / 800), 245 * (72 / 60), self.options_img, 1)
+        self.quit_button = button.Button(325 * (1080 / 800), 450 * (72 / 60), self.quit_img, 1)
         self.video_button = button.Button(226 * (1080 / 800), 7 * (72 / 60), self.video_img, 1)
         self.audio_button = button.Button(225 * (1080 / 800), 200 * (72 / 60), self.audio_img, 1)
         self.keys_button = button.Button(246 * (1080 / 800), 325 * (72 / 60), self.keys_img, 1)
-        self.back_button = button.Button(332 * (1080 / 800), 450 * (72 / 60), self.back_img, 1)
-        self.join_button = button.Button(225 * (1080 / 800), 40 * (72 / 60), self.f1_img, 1)
-        self.create_button = button.Button(200 * (1080 / 800), 375 * (72 / 60), self.f2_img, 1)
+        self.back_button = button.Button(332 * (1080 / 800), 400 * (72 / 60), self.back_img, 1)
+        self.join_button = button.Button(250 * (1080 / 800), 125 * (72 / 60), self.join_img, 1)
+        self.create_button = button.Button(250 * (1080 / 800), 350 * (72 / 60), self.create_img, 1)
 
     def check_whos_in(self):
       def get_names():
@@ -101,6 +101,7 @@ class MainMenu:
                                 reply = self.network.ping({})
                                 self.id = reply["id"]
                                 connect.collective_data = reply["data"]
+                                connect.collective_data[self.id]["ip"] = gethostbyname(gethostname())
                                 self.menu_state = "create"
                         if event.key == pygame.K_BACKSPACE:
                             self.server_address = self.server_address[:-1]
@@ -111,8 +112,8 @@ class MainMenu:
             if self.game_name:
                 # Handle menu states
                 if self.menu_state == "main":
-                    if self.start_button.draw(screen):
-                        print("Game started")
+                    # if self.start_button.draw(screen):
+                    #     print("Game started")
                     if self.options_button.draw(screen):
                         self.menu_state = "options"
                     if self.join_button.draw(screen):
@@ -135,7 +136,7 @@ class MainMenu:
                 
                 elif self.menu_state == "join":
                     # Display server address input
-                    input_rect = pygame.Rect(200 * (108 / 80), 200 * (72 / 60), 144, 32)
+                    input_rect = pygame.Rect(305 * (108 / 80), 200 * (72 / 60), 200, 32)
                     rec_color = pygame.Color("black")
 
                     text_surface = self.rec_font.render(self.server_address, True, (255, 255, 255))
@@ -148,11 +149,13 @@ class MainMenu:
                 
                 elif self.menu_state == "create":
                     # Show created server IP address
+                    if self.start_button.draw(screen) :
+                        print("CALL FUNCTION")
                     
                     if self.back_button.draw(screen): 
                         self.menu_state = "main"
                     
-                    player1_rect = pygame.Rect(600 * (108 / 80), 0, 150, 100) 
+                    player1_rect = pygame.Rect(150 * (108 / 80), 150, 175, 50) 
                     if not start_server_once[0]:
                       player1_server = gethostbyname(gethostname())
                       connect.init_server()
@@ -160,11 +163,12 @@ class MainMenu:
                       if self.server_address == "":
                         self.server_address = player1_server
                       connect.collective_data['addr'] = player1_server
+                      connect.collective_data["player0"]['ip'] = player1_server
                       self.network = Network(self.server_address, {})
                     p1_serv = self.rec_font.render(player1_server, True, (255, 255, 255))
                     name_display = self.rec_font.render(self.user_name1, True, (255, 255, 255))
                     
-                    pygame.draw.rect(screen, (255, 0, 255), player1_rect)
+                    pygame.draw.rect(screen, (0, 0, 0), player1_rect)
                     screen.blit(name_display, player1_rect.topleft)
                     screen.blit(p1_serv, (SCREEN_WIDTH * 0.42, SCREEN_HEIGHT * 0.05))
 
