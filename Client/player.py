@@ -31,6 +31,7 @@ class Player:
 		self.acc_scaling = 1
 		self.vel_drag = .8
 
+		self.animationHandler = AnimationHandler('loki')
 
 		self.camera_scroll_speed = 20
 		self.camera_scroll = [0, 0]
@@ -160,7 +161,7 @@ class Player:
 
 	def draw(self, screen):	
 		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
-						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
+									self.pos[1] - self.height/2 - self.camera_scroll[1]]
 
 		pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])
 

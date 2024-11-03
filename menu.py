@@ -3,6 +3,7 @@ import button
 from Network import connect
 from Network.network import Network
 from socket import gethostbyname, gethostname 
+import client
 
 pygame.init()
 
@@ -140,6 +141,7 @@ class MainMenu:
             
             else :
                 print("GAME START")
+                client.game_loop()
             # Event handler
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
