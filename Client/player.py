@@ -15,7 +15,7 @@ player_colours = [
 ]
 
 dulled_player_colours = [[j/2 for j in colour] for colour in player_colours]
-print(dulled_player_colours)
+
 class Player:
 
 	def __init__(self, screen_size, border_walls, block_width, playerID=0):
@@ -26,10 +26,13 @@ class Player:
 		self.vel = [0, 0]
 		self.acc = [0, 0]
 
-		self.width = 24 * 1.5
-		self.height = 24 * 1.5
-		self.acc_scaling = 1
+		self.sprite_scaling = 2
+		self.width = 24 * self.sprite_scaling
+		self.height = 24 * self.sprite_scaling
+		self.sprite_width = 20 * self.sprite_scaling
+		self.sprite_height = 20 * self.sprite_scaling
 		self.vel_drag = .8
+		self.acc_scaling = 1
 
 		self.animationHandler = AnimationHandler('loki')
 
@@ -61,6 +64,8 @@ class Player:
 
 		#other_players = [0,1,2,3].remove(playerID)
 		#self.kill_order = random.shuffle(other_players)
+
+
 
 
 
@@ -152,9 +157,14 @@ class Player:
 
 
 		#state time
-		self.state = 'idle'
+		if tick - self.roll_cooldown < 15 and tick > 15:
+			self.state = "dash"
+		elif abs(self.vel[0]) > 1 or abs(self.vel[1]) > 1:
+			self.state = "move"
+		else:
+			self.state = 'idle'
 
-
+		print(self.state)
 
 	def take_damage(self, amount):
 		print('OUCH! FUCK SHIT OOWWW THA TFUCKING HURTS')
@@ -163,13 +173,13 @@ class Player:
 
 	def draw(self, screen):	
 
-		sprite = self.animationHandler.get_sprite(self.state, 1.5)
+		sprite = self.animationHandler.get_sprite(self.state, self.sprite_scaling)
 
 		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
 						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
-		print(sprite.get_width())
+
 		screen.blit(sprite, self.draw_pos)
-		#pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])
+
 
 		#I shouldnt be doing this here but I am loosing my will to live
 		for laser in self.lasers:

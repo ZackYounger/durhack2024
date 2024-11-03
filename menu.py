@@ -3,6 +3,7 @@ import button
 from Network import connect
 from Network.network import Network
 from socket import gethostbyname, gethostname 
+import client
 
 pygame.init()
 
@@ -100,8 +101,14 @@ class MainMenu:
                         if event.type == pygame.KEYDOWN :
                             if event.key:
                                 self.network = Network(self.server_address, {})
+
+                                # fail to connect
                                 if not self.network.connected:
-                                    
+                                    pass
+
+                                # connected, go to waiting page
+                                else:
+                                    pass
                             if event.key == pygame.K_BACKSPACE :
                                 self.server_address = self.server_address[:-1]
                             else :
@@ -138,6 +145,7 @@ class MainMenu:
             
             else :
                 print("GAME START")
+                client.game_loop(screen=screen)
             # Event handler
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
