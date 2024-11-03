@@ -1,24 +1,28 @@
 import pygame
 import button
 from Network import connect
+from json import dumps, loads
 from Network.network import Network
 from socket import gethostbyname, gethostname 
-import client
+
+start_server_once = [False]
 
 pygame.init()
 
 # Create game window
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1080
+SCREEN_HEIGHT = 720
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Main Menu")
 
 class MainMenu:
     # Game variables
     def __init__(self):
-        self.game_start = False
+        self.game_name = False
         self.menu_state = "main"
         self.server_address = ""
+        self.user_name1 = ""
+        self.id = "-1"
 
         # Define fonts
         self.font = pygame.font.SysFont("arialblack", 40)
@@ -39,47 +43,71 @@ class MainMenu:
         self.f2_img = pygame.image.load('images/sq/x/f2.png').convert_alpha()
 
         # Create button instances
-        # TEMP values
-        self.start_button = button.Button(304, 125, self.resume_img, 1)
-        self.options_button = button.Button(297, 250, self.options_img, 1)
-        self.quit_button = button.Button(336, 375, self.quit_img, 1)
-        self.video_button = button.Button(226, 75, self.video_img, 1)
-        self.audio_button = button.Button(225, 200, self.audio_img, 1)
-        self.keys_button = button.Button(246, 325, self.keys_img, 1)
-        self.back_button = button.Button(332, 450, self.back_img, 1)
-        self.join_button = button.Button(225, 40, self.f1_img, 1)
-        self.create_button = button.Button(200, 375,self.f2_img, 1)
-
-
-    def draw_text(self, text, font, text_col, x, y):
-        img = font.render(text, True, text_col)
-        screen.blit(img, (x, y))
+        self.start_button = button.Button(304 * (1080 / 800), 125 * (72 / 60), self.resume_img, 1)
+        self.options_button = button.Button(297 * (1080 / 800), 250 * (72 / 60), self.options_img, 1)
+        self.quit_button = button.Button(336 * (1080 / 800), 375 * (72 / 60), self.quit_img, 1)
+        self.video_button = button.Button(226 * (1080 / 800), 7 * (72 / 60), self.video_img, 1)
+        self.audio_button = button.Button(225 * (1080 / 800), 200 * (72 / 60), self.audio_img, 1)
+        self.keys_button = button.Button(246 * (1080 / 800), 325 * (72 / 60), self.keys_img, 1)
+        self.back_button = button.Button(332 * (1080 / 800), 450 * (72 / 60), self.back_img, 1)
+        self.join_button = button.Button(225 * (1080 / 800), 40 * (72 / 60), self.f1_img, 1)
+        self.create_button = button.Button(200 * (1080 / 800), 375 * (72 / 60), self.f2_img, 1)
 
     def main_menu(self):
-        # Game loop
+        # Game loop 
         run = True
         while run:
             screen.fill((52, 78, 91))
 
-            # Check if game is started
-            if not self.game_start:
-                # Check menu state
+            # Event handler for all events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                if not self.game_name:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RETURN and self.user_name1:
+                            self.game_name = True 
+                        elif event.key == pygame.K_BACKSPACE:
+                            self.user_name1 = self.user_name1[:-1]
+                        else:
+                            self.user_name1 += event.unicode
+                elif self.menu_state == "join":
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RETURN :
+                            self.network = Network(self.server_address, {})
+
+                                # fail to connect
+                            if not self.network.connected:
+                                pass
+
+                            else:
+                                # connected, go to waiting page
+                                reply = self.network.ping({"empty": "name"})
+                                self.id = reply["id"]
+                                connect.collective_data = reply["data"]
+                                self.menu_state = "create"
+                        if event.key == pygame.K_BACKSPACE:
+                            self.server_address = self.server_address[:-1]
+                        else:
+                            self.server_address += event.unicode
+
+            # Draw based on the menu state
+            if self.game_name:
+                # Handle menu states
                 if self.menu_state == "main":
-                    # Draw pause screen buttons
                     if self.start_button.draw(screen):
-                        self.game_start = True
                         print("Game started")
                     if self.options_button.draw(screen):
                         self.menu_state = "options"
-                    if self.join_button.draw(screen) :
+                    if self.join_button.draw(screen):
                         self.menu_state = "join"
-                    if self.create_button.draw(screen) :
+                    if self.create_button.draw(screen):
                         self.menu_state = "create"        
                     if self.quit_button.draw(screen):
                         run = False
-                
-                elif self.menu_state == "options" : 
-                    # Draw the different options buttons
+
+                elif self.menu_state == "options": 
+                    # Draw options menu
                     if self.video_button.draw(screen):
                         print("Video Settings")
                     if self.audio_button.draw(screen):
@@ -89,72 +117,55 @@ class MainMenu:
                     if self.back_button.draw(screen):
                         self.menu_state = "main"
                 
-                elif self.menu_state == "join" :
-                    # TEMP values
-                    # input_box = pygame.Rect(300, 400, 500, 100)
-                    # pygame.draw.rect(screen, (0, 0, 0), input_box)
-                    #T0DO
-                    input_rect = pygame.Rect(200, 200, 144, 32)
+                elif self.menu_state == "join":
+                    # Display server address input
+                    input_rect = pygame.Rect(200 * (108 / 80), 200 * (72 / 60), 144, 32)
                     rec_color = pygame.Color("black")
-                    
-                    for event in pygame.event.get() :
-                        if event.type == pygame.KEYDOWN :
-                            if event.key:
-                                self.network = Network(self.server_address, {})
 
-                                # fail to connect
-                                if not self.network.connected:
-                                    pass
-
-                                # connected, go to waiting page
-                                else:
-                                    pass
-                            if event.key == pygame.K_BACKSPACE :
-                                self.server_address = self.server_address[:-1]
-                            else :
-                                self.server_address += event.unicode
-                    
                     text_surface = self.rec_font.render(self.server_address, True, (255, 255, 255))
-                    screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
                     pygame.draw.rect(screen, rec_color, input_rect, 2) 
+                    screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
                     
-                    if self.back_button.draw(screen) :
+                    if self.back_button.draw(screen):
                         self.menu_state = "main"
                         self.server_address = ""
                 
-                elif self.menu_state == "create" :
-                    if self.back_button.draw(screen) : 
-                        self.menu_state = "main"
-                        
-                        
-                    player1_rect = pygame.Rect(600, 0, 150, 100) 
-                    player1_server = gethostbyname(gethostname())
-                    connect.init_server()
+                elif self.menu_state == "create":
+                    # Show created server IP address
                     
-                    p1_serv = self.rec_font.render(player1_server, True, "white")
-                    player2_rect = pygame.Rect(100, 100, 150, 100)  
-                    player3_rect = pygame.Rect(200, 200, 150 , 100)
-                    player4_rect = pygame.Rect(300, 300, 150, 100)      
-                        
+                    if self.back_button.draw(screen): 
+                        self.menu_state = "main"
+                    
+                    player1_rect = pygame.Rect(600 * (108 / 80), 0, 150, 100) 
+                    if not start_server_once[0]:
+                      player1_server = gethostbyname(gethostname())
+                      connect.init_server()
+                      start_server_once[0] = True
+                      if self.server_address == "":
+                        self.server_address = player1_server
+                      self.network = Network(self.server_address, {})
+                    p1_serv = self.rec_font.render(player1_server, True, (255, 255, 255))
+                    name_display = self.rec_font.render(self.user_name1, True, (255, 255, 255))
+                    
                     pygame.draw.rect(screen, (255, 0, 255), player1_rect)
-                    screen.blit(p1_serv, (330, 0))
-                    pygame.draw.rect(screen, (255, 0, 255), player2_rect)
-                    pygame.draw.rect(screen, (255, 0, 255), player3_rect)
-                    pygame.draw.rect(screen, (255, 0, 255), player4_rect)
-                                    
-            
-            else :
-                print("GAME START")
-                client.game_loop(screen=screen)
-            # Event handler
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
+                    screen.blit(name_display, player1_rect.topleft)
+                    screen.blit(p1_serv, (SCREEN_WIDTH * 0.42, SCREEN_HEIGHT * 0.05))
 
-            pygame.display.update()
-             
+            else:
+                # Username entry before the game starts
+                user_rect = pygame.Rect(SCREEN_WIDTH // 2 - SCREEN_WIDTH // 12, SCREEN_HEIGHT - (SCREEN_HEIGHT - 50), 144, 32)
+                pygame.draw.rect(screen, pygame.Color("white"), user_rect, 2)
+                
+                user_text_surface = self.rec_font.render(self.user_name1, True, (255, 255, 255))
+                screen.blit(user_text_surface, (user_rect.x + 5, user_rect.y + 5))
+                
+                user_prompt = self.rec_font.render("Enter your username:", True, (255, 255, 255))
+                screen.blit(user_prompt, (SCREEN_WIDTH // 8, SCREEN_HEIGHT - (SCREEN_HEIGHT - 55)))
+
+            # Update the display
+            pygame.display.flip()
+
+# Initialize and start main menu
 xd = MainMenu()
 xd.main_menu()
-
 pygame.quit()
-
