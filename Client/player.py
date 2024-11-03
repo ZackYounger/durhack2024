@@ -20,7 +20,7 @@ dulled_player_colours = [[j/2 for j in colour] for colour in player_colours]
 print(dulled_player_colours)
 class Player:
 
-	def __init__(self, screen_size, border_walls, block_width, host, playerID=0):
+	def __init__(self, screen_size, border_walls, block_width, playerID=0):
 		
 		self.playerID = playerID
 
@@ -33,7 +33,6 @@ class Player:
 		self.acc_scaling = 1
 		self.vel_drag = .8
 
-		self.spritesheet = 
 
 		self.camera_scroll_speed = 20
 		self.camera_scroll = [0, 0]

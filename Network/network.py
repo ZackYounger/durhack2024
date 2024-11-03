@@ -23,7 +23,6 @@ class Network:
         return True
       else:
         raise Exception("No Connection")
-        return False
     except socket.error as e:
       
       print(e)
