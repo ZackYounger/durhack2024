@@ -22,7 +22,7 @@ def threaded_client(conn, collective_data, index=None):
         collective_data["player" + str(reply["playerID"])] = reply
         conn.sendall(str.encode(dumps(collective_data)))
     except:
-      pass
+      break
 
   conn.close()
 
@@ -40,7 +40,7 @@ def start_server(collective_data):
     str(e)
 
   print("Waiting for a connection, Server Started")
-    
+
   while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
