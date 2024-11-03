@@ -6,6 +6,7 @@ import Network.network as network
 
 from Client.player import Player
 from Client.levelManager import Level
+from Client.animations import AnimationHandler
 
 
 screen_width = 1080
@@ -29,15 +30,25 @@ def ping(data):
 
 def game_loop(screen):
 
-  n = network.Network(connect.collective_data['addr'], connect.collective_data)
+  #n = network.Network(connect.collective_data['addr'], connect.collective_data)
+
+  #seed = connect.collective_data.seed
+  seed = 69.420
+
+  playerID = 0
+
+  opps = [0,1,2,3]
+  opps.remove(playerID)
+  opp_animationHandlers = {opp : AnimationHandler(opp) for opp in opps}
+
 
   level = Level()
-  level.create_new_level(41)
+  level.create_new_level(41, seed)
   border_walls = level.get_border_walls()
 
   block_width = level.block_width
 
-  player = Player([screen_width, screen_height], border_walls, block_width)
+  player = Player([screen_width, screen_height], border_walls, block_width, len(opps))
 
   clock = pygame.time.Clock()     ## For syncing the FPS
 
@@ -60,12 +71,36 @@ def game_loop(screen):
 
     player.update(dt, tick, keys)
 
-    level.draw(screen, player.camera_scroll)
+    level.draw(screen, player.camera_scroll, player.screen_shake)
 
     player.draw(screen)
-    connect.collective_data = n.ping(connect.collective_data["player" + str(Player.playerID)])
+
+    #time to assemble the COLLECTIVE DATA
+    data = {}
+    data['pos'] = player.pos
+    data['state'] = player.state
+    #data['health'] = player.health #FUKCING KILL DNAIAL
+    data['new_lasers'] = player.lasers_to_send
+
+
+
+    #connect.collective_data = n.ping(connect.collective_data["player" + str(Player.playerID)])
     print(connect.collective_data)
     ## Done after drawing everything to the screen
+
+
+    #draw other players
+    for oppI in range(4):
+        if oppI != player.playerID:
+            sprite = opp_animationHandlers[oppI].get_sprite(connect.collective_data[oppI]['state'], player.sprite_scaling)
+            screen.blit(sprite, sub_vecs(connect.collective_data[oppI]['pos'], player.camera_scroll + player.screen_shake))
+
+            player.create_laser(*connect.collective_data[oppI]['new_lasers'], oppI)
+
+
+
+    player.lasers_to_send = []
+
     pygame.display.flip()       
 
   pygame.quit()
