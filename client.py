@@ -22,11 +22,6 @@ pygame.mixer.init()  ## For sound
 def ping(data):
   return network.ping(data)
 
-level = Level()
-level.create_new_level(41)
-border_walls = level.get_border_walls()
-
-block_width = level.block_width
 
 
 
@@ -34,6 +29,13 @@ block_width = level.block_width
 
 
 def game_loop(screen):
+
+  level = Level()
+  level.create_new_level(41)
+  border_walls = level.get_border_walls()
+
+  block_width = level.block_width
+
   player = Player([screen_width, screen_height], border_walls, block_width)
 
   clock = pygame.time.Clock()     ## For syncing the FPS
