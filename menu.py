@@ -33,26 +33,26 @@ class MainMenu:
         self.TEXT_COL = (255, 255, 255)
 
         # Load button images
-        self.resume_img = pygame.image.load("Assets/Buttons/button_resume.png").convert_alpha()
+        #self.resume_img = pygame.image.load("Assets/Buttons/button_resume.png").convert_alpha()
         self.options_img = pygame.image.load("Assets/Buttons/button_options.png").convert_alpha()
         self.quit_img = pygame.image.load("Assets/Buttons/button_quit.png").convert_alpha()
         self.video_img = pygame.image.load('Assets/Buttons/button_video.png').convert_alpha()
         self.audio_img = pygame.image.load('Assets/Buttons/button_audio.png').convert_alpha()
         self.keys_img = pygame.image.load('Assets/Buttons/button_keys.png').convert_alpha()
         self.back_img = pygame.image.load('Assets/Buttons/button_back.png').convert_alpha()
-        self.f1_img = pygame.image.load('images/sq/x/f1.png').convert_alpha()
-        self.f2_img = pygame.image.load('images/sq/x/f2.png').convert_alpha()
+        self.join_img = pygame.image.load('Assets/Buttons/join_button.png').convert_alpha()
+        self.create_img = pygame.image.load('Assets/Buttons/craete_button.png').convert_alpha()
 
         # Create button instances
-        self.start_button = button.Button(304 * (1080 / 800), 125 * (72 / 60), self.resume_img, 1)
-        self.options_button = button.Button(297 * (1080 / 800), 250 * (72 / 60), self.options_img, 1)
-        self.quit_button = button.Button(336 * (1080 / 800), 375 * (72 / 60), self.quit_img, 1)
+        #self.start_button = button.Button(304 * (1080 / 800), 125 * (72 / 60), self.resume_img, 1)
+        self.options_button = button.Button(297 * (1080 / 800), 245 * (72 / 60), self.options_img, 1)
+        self.quit_button = button.Button(325 * (1080 / 800), 450 * (72 / 60), self.quit_img, 1)
         self.video_button = button.Button(226 * (1080 / 800), 7 * (72 / 60), self.video_img, 1)
         self.audio_button = button.Button(225 * (1080 / 800), 200 * (72 / 60), self.audio_img, 1)
         self.keys_button = button.Button(246 * (1080 / 800), 325 * (72 / 60), self.keys_img, 1)
-        self.back_button = button.Button(332 * (1080 / 800), 450 * (72 / 60), self.back_img, 1)
-        self.join_button = button.Button(225 * (1080 / 800), 40 * (72 / 60), self.f1_img, 1)
-        self.create_button = button.Button(200 * (1080 / 800), 375 * (72 / 60), self.f2_img, 1)
+        self.back_button = button.Button(332 * (1080 / 800), 400 * (72 / 60), self.back_img, 1)
+        self.join_button = button.Button(250 * (1080 / 800), 125 * (72 / 60), self.join_img, 1)
+        self.create_button = button.Button(250 * (1080 / 800), 350 * (72 / 60), self.create_img, 1)
 
     def main_menu(self):
         # Game loop 
@@ -97,8 +97,8 @@ class MainMenu:
             if self.game_name:
                 # Handle menu states
                 if self.menu_state == "main":
-                    if self.start_button.draw(screen):
-                        print("Game started")
+                    # if self.start_button.draw(screen):
+                    #     print("Game started")
                     if self.options_button.draw(screen):
                         self.menu_state = "options"
                     if self.join_button.draw(screen):
@@ -121,7 +121,7 @@ class MainMenu:
                 
                 elif self.menu_state == "join":
                     # Display server address input
-                    input_rect = pygame.Rect(200 * (108 / 80), 200 * (72 / 60), 144, 32)
+                    input_rect = pygame.Rect(305 * (108 / 80), 200 * (72 / 60), 200, 32)
                     rec_color = pygame.Color("black")
 
                     text_surface = self.rec_font.render(self.server_address, True, (255, 255, 255))
