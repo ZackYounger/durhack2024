@@ -1,5 +1,6 @@
 import pygame
 import button
+from Network import connect
 from socket import gethostbyname, gethostname 
 
 pygame.init()
@@ -115,11 +116,15 @@ class MainMenu:
                         
                     player1_rect = pygame.Rect(600, 0, 150, 100) 
                     player1_server = gethostbyname(gethostname())
+                    connect.init_server()
+                    
+                    p1_serv = self.rec_font.render(player1_server, True, "white")
                     player2_rect = pygame.Rect(100, 100, 150, 100)  
                     player3_rect = pygame.Rect(200, 200, 150 , 100)
                     player4_rect = pygame.Rect(300, 300, 150, 100)      
                         
                     pygame.draw.rect(screen, (255, 0, 255), player1_rect)
+                    screen.blit(p1_serv, (330, 0))
                     pygame.draw.rect(screen, (255, 0, 255), player2_rect)
                     pygame.draw.rect(screen, (255, 0, 255), player3_rect)
                     pygame.draw.rect(screen, (255, 0, 255), player4_rect)
