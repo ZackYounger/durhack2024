@@ -1,4 +1,6 @@
 import pygame
+import random
+
 from Network.network import Network
 
 from Client.helpers import multiply_vec_float, add_vecs
@@ -55,12 +57,8 @@ class Player:
 		self.last_shoot = 0
 		self.lasers = []
 
-<<<<<<< HEAD
-		other_players = [0,1,2,3].remove(playerID)
-		self.kill_order = random.shuffle(other_players)
-=======
-		self.network = Network(host, {"player-id": None, "pos": self.pos})
->>>>>>> 53b89c30027f8d7a63bcb8613665b99de25e5196
+		#other_players = [0,1,2,3].remove(playerID)
+		#self.kill_order = random.shuffle(other_players)
 
 
 	def update(self, dt, tick, keys):
