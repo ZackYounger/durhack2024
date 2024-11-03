@@ -34,6 +34,10 @@ class Player:
 		self.vel_drag = .8
 		self.acc_scaling = 1
 
+		
+		self.health_bar = pygame.image.load("Assets/HealthBarPLEASE.png").convert_alpha()
+		self.health_scale = 3*self.health_bar.get_width()
+		self.scaled_bar = pygame.transform.scale(self.health_bar, (self.health_scale, 2*self.health_bar.get_height()))
 		self.animationHandler = AnimationHandler('loki')
 
 		self.camera_scroll_speed = 20
@@ -180,6 +184,12 @@ class Player:
 
 		screen.blit(sprite, self.draw_pos)
 
+
+
+		self.health_draw_pos = [self.pos[0] - self.scaled_bar.get_width()/2 - self.camera_scroll[0],
+						 self.pos[1] + self.height/2 + 5 - self.camera_scroll[1]]
+
+		screen.blit(self.scaled_bar, self.health_draw_pos)
 
 		#I shouldnt be doing this here but I am loosing my will to live
 		for laser in self.lasers:
