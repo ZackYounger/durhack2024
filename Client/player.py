@@ -1,10 +1,12 @@
 import pygame
 import random
-
+import math
 from Client.laser import Laser
 from Client.animations import AnimationHandler
 
 from Client.helpers import multiply_vec_float, add_vecs, sub_vecs
+
+from math import atan2
 
 player_colours = [
 	(0, 51, 204),
@@ -16,9 +18,11 @@ player_colours = [
 
 dulled_player_colours = [[j/2 for j in colour] for colour in player_colours]
 
+
+
 class Player:
 
-	def __init__(self, screen_size, border_walls, block_width, playerID=0):
+	def __init__(self, screen_size, border_walls, block_width, numPlayers, playerID=0):
 		
 		self.playerID = playerID
 
@@ -64,16 +68,38 @@ class Player:
 		self.laser_speed = 1
 		self.shoot_cooldown = 60
 		self.last_shoot = 0
+		self.laser_damage = 20
 		self.lasers = []
 
-		#other_players = [0,1,2,3].remove(playerID)
-		#self.kill_order = random.shuffle(other_players)
+		self.gun = pygame.image.load('Assets/sprites/gun.png').convert_alpha()
+		self._base_sprite = pygame.image.load('Assets/sprites/gun.png').convert_alpha()
+
+		self.numPlayers = numPlayers
+
+		other_players = [i for i in numPlayers]
+		other_players.remove(playerID)
+		self.kill_order = random.shuffle(other_players)
+
+		self.real_order = []
 
 
 
 
 
 	def update(self, dt, tick, keys):
+
+		#check kill order
+		i = 0
+		if len(self.real_order) > i
+			if self.kill_order[i] == self.real_order[i]:
+				i+=1
+				if i == self.numPlayers:
+					#winn!!!
+			else:
+				self.real_order = []
+				#Need a fail screen
+
+
 
 		#dt_const = dt * 60
 		#nah fuck that if your game is laggy you're on your own
@@ -84,7 +110,7 @@ class Player:
 		#mouse shenanigans
 		mx, my = pygame.mouse.get_pos()
 		mouse_dir = [mx - self.screen_width/2, my - self.screen_height/2]
-		normal_mouse_dir = multiply_vec_float(mouse_dir, 1/(mouse_dir[0]**2 + mouse_dir[1]**2)**.5)
+		self.normal_mouse_dir = multiply_vec_float(mouse_dir, 1/(mouse_dir[0]**2 + mouse_dir[1]**2)**.5)
 
 
 
@@ -92,8 +118,8 @@ class Player:
 		if keys[self.controls["roll"]]:
 			if tick - self.last_roll > self.roll_cooldown:
 
-				self.acc = add_vecs(self.acc, multiply_vec_float(normal_mouse_dir, self.roll_speed))
-				self.vel = add_vecs(self.vel, multiply_vec_float(normal_mouse_dir, self.roll_speed/300))
+				self.acc = add_vecs(self.acc, multiply_vec_float(self.normal_mouse_dir, self.roll_speed))
+				self.vel = add_vecs(self.vel, multiply_vec_float(self.normal_mouse_dir, self.roll_speed/300))
 
 				self.last_roll = tick
 
@@ -103,7 +129,7 @@ class Player:
 		if keys[self.controls["shoot"]]:
 			if tick - self.last_shoot > self.shoot_cooldown:
 
-				self.lasers.append( Laser(self.pos, normal_mouse_dir, self.playerID) )
+				self.lasers.append( Laser(self.pos, self.normal_mouse_dir, self.playerID) )
 
 				self.last_shoot = tick
 
@@ -161,7 +187,7 @@ class Player:
 
 
 		#state time
-		if self.vel[0] < 0:
+		if self.normal_mouse_dir[0] < 0:
 			self.flipped = True
 		else:
 			self.flipped = False
@@ -176,7 +202,7 @@ class Player:
 
 
 	def take_damage(self, amount):
-		print('OUCH! FUCK SHIT OOWWW THA TFUCKING HURTS')
+		self.health -= self.laser_damage
 
 
 
@@ -185,24 +211,55 @@ class Player:
 		sprite = self.animationHandler.get_sprite(self.state, self.sprite_scaling)
 		sprite = pygame.transform.flip(sprite, self.flipped, False)
 
-		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
+		draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
 						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
 
-		screen.blit(sprite, self.draw_pos)
+		screen.blit(sprite, draw_pos)
 
-		gun = pygame.image.load('Assets/sprites/gun.png').convert_alpha()
-		screen.blit(gun, sub_vecs(self.pos, self.camera_scroll))
+		gun = pygame.transform.scale(self.gun, (self.gun.get_width()*2,self.gun.get_height()*2))
+		gun = pygame.transform.flip(gun, True, self.flipped)
+		draw_pos = [self.pos[0] - gun.get_width()/2 - self.camera_scroll[0],
+						 self.pos[1] - self.camera_scroll[1]]
+
+
+		gun2 = self.rot_center(gun, atan2(self.normal_mouse_dir[0],self.normal_mouse_dir[1]))
+
+		#gun, rect = rot_center(gun, atan2(self.normal_mouse_dir[1],self.normal_mouse_dir[0]), *draw_pos)
+		try:
+			screen.blit(gun2, draw_pos)
+		except:
+			pass
+
 
 
 
 		self.health_draw_pos = [self.pos[0] - self.scaled_bar.get_width()/2 - self.camera_scroll[0],
 						 self.pos[1] + self.height/2 + 5 - self.camera_scroll[1]]
 
+
 		screen.blit(self.scaled_bar, self.health_draw_pos)
 
 		#I shouldnt be doing this here but I am loosing my will to live
 		for laser in self.lasers:
 			laser.draw(screen, self.camera_scroll, dulled_player_colours)
+
+
+
+	def rot_center(self, image, angle):
+		try:
+		    """rotate an image while keeping its center and size"""
+		    orig_rect = image.get_rect()
+		    rot_image = pygame.transform.rotate(image, angle / 3.1415 * 180 - 90 )#math.degrees(angle))
+		    rot_rect = orig_rect.copy()
+		    rot_rect.center = rot_image.get_rect().center
+		    rot_image = rot_image.subsurface(rot_rect).copy()
+		    return rot_image
+		except:
+		   	pass
+
+
+
+
 
 
 
