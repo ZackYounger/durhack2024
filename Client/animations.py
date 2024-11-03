@@ -20,7 +20,7 @@ class AnimationHandler:
 
 
 	# if i keeled over tomrrow you fucks would have no idea what this whitchcraft meant
-	def get_sprite(state):
+	def get_sprite(self, state, scale=1):
 		self.current_state_frame += 1
 		if self.last_state != state:
 			self.current_state_frame = 0
@@ -35,4 +35,4 @@ class AnimationHandler:
 
 		self.last_state = state
 
-		return self.sheets[state].get_image(self.frame_index)
+		return self.sheets[state].get_image(self.frame_index, scale)

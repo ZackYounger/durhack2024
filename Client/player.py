@@ -26,8 +26,8 @@ class Player:
 		self.vel = [0, 0]
 		self.acc = [0, 0]
 
-		self.width = 25
-		self.height = 25
+		self.width = 24 * 1.5
+		self.height = 24 * 1.5
 		self.acc_scaling = 1
 		self.vel_drag = .8
 
@@ -151,6 +151,8 @@ class Player:
 
 
 
+		#state time
+		self.state = 'idle'
 
 
 
@@ -160,10 +162,14 @@ class Player:
 
 
 	def draw(self, screen):	
-		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
-									self.pos[1] - self.height/2 - self.camera_scroll[1]]
 
-		pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])
+		sprite = self.animationHandler.get_sprite(self.state, 1.5)
+
+		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
+						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
+		print(sprite.get_width())
+		screen.blit(sprite, self.draw_pos)
+		#pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])
 
 		#I shouldnt be doing this here but I am loosing my will to live
 		for laser in self.lasers:
