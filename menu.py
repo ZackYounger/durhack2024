@@ -101,6 +101,7 @@ class MainMenu:
                                 reply = self.network.ping({})
                                 self.id = reply["id"]
                                 connect.collective_data = reply["data"]
+                                connect.collective_data[self.id]["ip"] = gethostbyname(gethostname())
                                 self.menu_state = "create"
                         if event.key == pygame.K_BACKSPACE:
                             self.server_address = self.server_address[:-1]
@@ -162,6 +163,7 @@ class MainMenu:
                       if self.server_address == "":
                         self.server_address = player1_server
                       connect.collective_data['addr'] = player1_server
+                      connect.collective_data["player0"]['ip'] = player1_server
                       self.network = Network(self.server_address, {})
                     p1_serv = self.rec_font.render(player1_server, True, (255, 255, 255))
                     name_display = self.rec_font.render(self.user_name1, True, (255, 255, 255))
