@@ -13,6 +13,7 @@ class Network:
     self.addr = (self.server, self.port)
     self.connected = self.connect(data)
 
+
   def connect(self, data):
     try:
       self.client.connect(self.addr)
@@ -24,8 +25,9 @@ class Network:
         raise Exception("No Connection")
         return False
     except socket.error as e:
-      print(e)
       
+      print(e)
+      return False
 
 
   def ping(self, data):
