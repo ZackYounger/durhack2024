@@ -11,7 +11,7 @@ FPS = 60
 level = Level()
 level.create_new_level(41)
 border_walls = level.get_border_walls()
-print(border_walls)
+
 block_width = level.block_width
 
 player = Player([screen_width, screen_height], border_walls, block_width)
