@@ -103,3 +103,9 @@ class Level:
                                     (y - self.size / 2) * self.block_width]
                     draw_pos = [screen_pos[0] + 1 - camera_scroll[0] , screen_pos[1] + 1 - camera_scroll[1]]
                     pygame.draw.rect(screen, (255,0,255) if (x,y) in self.border_walls else (255,0,0), [*draw_pos, self.block_width - 2, self.block_width - 2])
+
+
+
+
+
+                    
