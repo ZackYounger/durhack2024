@@ -157,6 +157,12 @@ class Player:
 
 
 		#state time
+		if self.vel[0] < 0:
+			self.flipped = True
+		else:
+			self.flipped = False
+
+
 		if tick - self.roll_cooldown < 15 and tick > 15:
 			self.state = "dash"
 		elif abs(self.vel[0]) > 1 or abs(self.vel[1]) > 1:
@@ -164,7 +170,6 @@ class Player:
 		else:
 			self.state = 'idle'
 
-		print(self.state)
 
 	def take_damage(self, amount):
 		print('OUCH! FUCK SHIT OOWWW THA TFUCKING HURTS')
@@ -174,6 +179,7 @@ class Player:
 	def draw(self, screen):	
 
 		sprite = self.animationHandler.get_sprite(self.state, self.sprite_scaling)
+		sprite = pygame.transform.flip(sprite, False, self.flipped)
 
 		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
 						 self.pos[1] - self.height/2 - self.camera_scroll[1]]

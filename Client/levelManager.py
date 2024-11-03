@@ -1,8 +1,10 @@
 import pygame
+from pygame import Color as Colour
 
 from random import choice
 from perlin_noise import PerlinNoise
 from time import time
+import spritesheet
 
 from Client.helpers import add_vecs, multiply_vec_float
 
@@ -63,6 +65,8 @@ class Level:
                 if noise([(x+seed/10)/freq,(y+seed/10)/freq]) > -.05 + (dist_to_center / max_distance_to_center)**20: #+ ((dist_to_center / max_distance_to_center)**4)*1.5:
                     self.level[y][x] = 0
 
+        self.spritify_level()
+
 
 
     #Danial you lazy fuck
@@ -79,6 +83,7 @@ class Level:
         # Directions to check neighboring cells (up, down, left, right)
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
+
         # Find all walls adjacent to empty space
         for r in range(rows):
             for c in range(cols):
@@ -92,20 +97,62 @@ class Level:
         return [pygame.Rect(*multiply_vec_float(add_vecs(wall, [-self.size/2]*2), self.block_width), self.block_width, self.block_width) for wall in border_walls]
         
 
-    def draw(self, screen, camera_scroll):
+    def spritify_level(self):
 
+        drs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+        self.level_sprites_indices = [[-1 for i in range(self.size)] for j in range(self.size)]
+
+        self.grass_sprites = spritesheet.SpriteSheet('Assets/sprites/terrain_pack/Terrain/Ground/Tilemap_Flat.png', columns=10, rows=4, colour_key=Colour(255, 255, 255))
+        self.stone_sprites = spritesheet.SpriteSheet('Assets/sprites/terrain_pack/Terrain/Ground/Tilemap_Elevation.png', columns=4, rows=8, colour_key=Colour(255, 255, 255))
+        print( dir(self.stone_sprites) )
+        #for i in range(3):
+        #    self.level_sprites += ss.images_at((j*128, i*128, 128, 128) for j in range(3))
+        z = []
         for y in range(len(self.level)):
-            for x in range(len(self.level[y])):
+            for x in range(len(self.level[0])):
 
-                if self.level[y][x] == 1:
+                if self.level[y][x] == 0:
+                    offset = [1, 1]
+                    for dr in drs:
+                        #dr = drc[]
+                        try:
+                            if self.level[y + dr[1]][x + dr[0]] == 1:
+                                    
+                                offset = add_vecs(offset, dr)
+                        except:
+                            pass
+
+                    if offset == [0, 0]:
+                        self.level_sprites_indices[y][x] = 44
+                    else:
+                        self.level_sprites_indices[y][x] = offset[0] + 4 * offset[1]
+
+                    if offset[1] == 2:
+                        self.level_sprites_indices[y + 1][x] = offset[0] + 4 * (offset[1]+1)
+
+
+
+
+    def draw(self, screen, camera_scroll):
+        for y in range(len(self.level)):
+            for x in range(len(self.level[0])):
+
+                if self.level_sprites_indices[y][x] != -1:
+
 
                     screen_pos = [(x - self.size / 2) * self.block_width,
-                                    (y - self.size / 2) * self.block_width]
+                                        (y - self.size / 2) * self.block_width]
                     draw_pos = [screen_pos[0] + 1 - camera_scroll[0] , screen_pos[1] + 1 - camera_scroll[1]]
-                    pygame.draw.rect(screen, (255,0,255) if (x,y) in self.border_walls else (255,0,0), [*draw_pos, self.block_width - 2, self.block_width - 2])
+
+                    myNewSurface = pygame.Surface((self.size*2, self.size*2))
+                    if level_sprites_indices[y][x] <= 32:
+                        self.stone_sprites.blit(myNewSurface, self.level_sprites_indices[y][x], position=(0,0))
+                    else:
+                        self.grass_sprites.blit(myNewSurface, self.level_sprites_indices[y][x] - 32, position=(0,0))
+
+                    surf = pygame.transform.scale(myNewSurface, (self.size, self.size))
+                    screen.blit(surf, draw_pos)
 
 
 
-
-
-                    
