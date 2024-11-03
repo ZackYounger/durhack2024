@@ -8,7 +8,7 @@ class SpriteSheet:
 
 	def get_image(self, frame, scale=1, colour=(255,255,255)):
 		frame = frame % self.no_sprites
-		image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+		image = pygame.Surface((self.width, self.height)).convert_alpha()
 		image.blit(self.sheet, (0, 0), ((frame * self.width), 0, self.width, self.height))
 		image = pygame.transform.scale(image, (self.width * scale, self.height * scale))
 		#image.set_colorkey(colour)

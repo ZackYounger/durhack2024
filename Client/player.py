@@ -26,22 +26,14 @@ class Player:
 		self.vel = [0, 0]
 		self.acc = [0, 0]
 
-		self.health = 100
-
-		self.sprite_scaling = 2
-
-		self.width = 20 * self.sprite_scaling
-		self.height = 20 * self.sprite_scaling
-		self.sprite_width = 24 * self.sprite_scaling
-		self.sprite_height = 24 * self.sprite_scaling
-		self.flipped = False
-
+		self.width = 24 * 1.5
+		self.height = 24 * 1.5
 		self.acc_scaling = 1
 		self.vel_drag = .8
 
 		self.animationHandler = AnimationHandler('loki')
 
-		self.camera_scroll_speed = .2
+		self.camera_scroll_speed = 20
 		self.camera_scroll = [0, 0]
 
 		self.block_width = block_width
@@ -58,7 +50,7 @@ class Player:
                     "roll": pygame.K_SPACE,
                     "esc": pygame.K_ESCAPE}
 		
-		self.roll_speed = 20
+		self.roll_speed = 50
 		self.roll_cooldown = 120
 		self.last_roll = 0
     
@@ -91,10 +83,10 @@ class Player:
 		if keys[self.controls["roll"]]:
 			if tick - self.last_roll > self.roll_cooldown:
 
-				self.last_roll = tick
+				self.acc = add_vecs(self.acc, multiply_vec_float(normal_mouse_dir, self.roll_speed))
+				self.vel = add_vecs(self.vel, multiply_vec_float(normal_mouse_dir, self.roll_speed/300))
 
-		if tick - self.last_roll < 3:
-			self.acc = add_vecs(self.acc, multiply_vec_float(normal_mouse_dir, self.roll_speed))
+				self.last_roll = tick
 
 
 
@@ -160,34 +152,25 @@ class Player:
 
 
 		#state time
-
-		self.flipped = True if self.vel[0] < 0 else False
-
-		if tick - self.last_roll < 30:
-			self.state = 'dash'
-		elif abs(self.vel[0]) < .1 and abs(self.vel[1]) < .1:
-			self.state = 'idle'
-		else:
-			self.state = 'move'
+		self.state = 'idle'
 
 
 
 	def take_damage(self, amount):
-		self.heath -= amount
+		print('OUCH! FUCK SHIT OOWWW THA TFUCKING HURTS')
 
 
 
 	def draw(self, screen):	
 
-		sprite = pygame.transform.flip(
-			self.animationHandler.get_sprite(self.state, self.sprite_scaling),
-			self.flipped, False)
+		sprite = self.animationHandler.get_sprite(self.state, 1.5)
 
-		self.draw_pos = [self.pos[0] - self.sprite_width/2 - self.camera_scroll[0],
-						 self.pos[1] - self.sprite_height/2 - self.camera_scroll[1]]
-		
+		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
+						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
+		print(sprite.get_width())
 		screen.blit(sprite, self.draw_pos)
-		#pygame.draw.rect(screen, (255,0,0), [100,100,200,100])
+		#pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])
+
 		#I shouldnt be doing this here but I am loosing my will to live
 		for laser in self.lasers:
 			laser.draw(screen, self.camera_scroll, dulled_player_colours)
