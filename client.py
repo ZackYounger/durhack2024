@@ -11,6 +11,15 @@ screen_width = 1080
 screen_height = 720
 FPS = 60
 
+
+## initialize pygame and create window
+pygame.init()
+pygame.mixer.init()  ## For sound
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Hello There")
+clock = pygame.time.Clock()     ## For syncing the FPS
+
+
 level = Level()
 level.create_new_level(41)
 border_walls = level.get_border_walls()
@@ -22,14 +31,6 @@ connect.init_server()
 
 player = Player([screen_width, screen_height], border_walls, block_width, "169.254.131.250")
 
-
-
-## initialize pygame and create window
-pygame.init()
-pygame.mixer.init()  ## For sound
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Hello There")
-clock = pygame.time.Clock()     ## For syncing the FPS
 
 
 ## Game loop
@@ -59,3 +60,7 @@ while running:
     pygame.display.flip()       
 
 pygame.quit()
+
+
+def ping(self, data):
+    return self.network.ping(data)

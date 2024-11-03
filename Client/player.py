@@ -1,12 +1,10 @@
 import pygame
 import random
 
-from Network.network import Network
-
 from Client.laser import Laser
-from spritesheet import Spritesheet
+from Client.animations import AnimationHandler
 
-from Client.helpers import multiply_vec_float, add_vecs
+from Client.helpers import multiply_vec_float, add_vecs, sub_vecs
 
 player_colours = [
 	(0, 51, 204),
@@ -33,7 +31,7 @@ class Player:
 		self.acc_scaling = 1
 		self.vel_drag = .8
 
-		self.spritesheet = 
+		self.animationHandler = AnimationHandler('loki')
 
 		self.camera_scroll_speed = 20
 		self.camera_scroll = [0, 0]
@@ -61,8 +59,8 @@ class Player:
 		self.last_shoot = 0
 		self.lasers = []
 
-		other_players = [0,1,2,3].remove(playerID)
-		self.kill_order = random.shuffle(other_players)
+		#other_players = [0,1,2,3].remove(playerID)
+		#self.kill_order = random.shuffle(other_players)
 
 
 
@@ -152,8 +150,8 @@ class Player:
 				self.lasers.remove(laser)
 
 
-	def ping(self, data):
-		return self.network.ping(data)
+
+
 
 
 	def take_damage(self, amount):
@@ -164,12 +162,8 @@ class Player:
 	def draw(self, screen):	
 		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
 						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
-		pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])
 
-		#for wall in self.border_walls:
-		#	
-		#	draw_pos = [wall[0] + 1 - self.camera_scroll[0] , wall[1] + 1 - self.camera_scroll[1]]
-		#	pygame.draw.rect(screen, (55,100,155), [*draw_pos, self.block_width - 2, self.block_width - 2])
+		pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])
 
 		#I shouldnt be doing this here but I am loosing my will to live
 		for laser in self.lasers:

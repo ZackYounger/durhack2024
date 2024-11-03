@@ -9,7 +9,7 @@ from Client.helpers import add_vecs, multiply_vec_float
 class Level:
 
     def __init__(self):
-        self.block_width = 20
+        self.block_width = 30
 
     def old_create_new_level(self, size):
 
@@ -102,5 +102,4 @@ class Level:
                     screen_pos = [(x - self.size / 2) * self.block_width,
                                     (y - self.size / 2) * self.block_width]
                     draw_pos = [screen_pos[0] + 1 - camera_scroll[0] , screen_pos[1] + 1 - camera_scroll[1]]
-                    if (x,y) not in self.border_walls:
-                        pygame.draw.rect(screen, (255,0,255) if (x,y) in self.border_walls else (255,0,0), [*draw_pos, self.block_width - 2, self.block_width - 2])
+                    pygame.draw.rect(screen, (255,0,255) if (x,y) in self.border_walls else (255,0,0), [*draw_pos, self.block_width - 2, self.block_width - 2])
