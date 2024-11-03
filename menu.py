@@ -4,6 +4,7 @@ from Network import connect
 from json import dumps, loads
 from Network.network import Network
 from socket import gethostbyname, gethostname 
+import client
 
 start_server_once = [False]
 
@@ -86,6 +87,7 @@ class MainMenu:
                                 self.id = reply["id"]
                                 connect.collective_data = reply["data"]
                                 self.menu_state = "create"
+                                client.game_loop(screen=screen)
                         if event.key == pygame.K_BACKSPACE:
                             self.server_address = self.server_address[:-1]
                         else:
@@ -164,6 +166,8 @@ class MainMenu:
 
             # Update the display
             pygame.display.flip()
+
+
 
 # Initialize and start main menu
 xd = MainMenu()

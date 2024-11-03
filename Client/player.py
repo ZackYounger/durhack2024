@@ -183,12 +183,15 @@ class Player:
 	def draw(self, screen):	
 
 		sprite = self.animationHandler.get_sprite(self.state, self.sprite_scaling)
-		sprite = pygame.transform.flip(sprite, False, self.flipped)
+		sprite = pygame.transform.flip(sprite, self.flipped, False)
 
 		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
 						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
 
 		screen.blit(sprite, self.draw_pos)
+
+		gun = pygame.image.load('Assets/sprites/gun.png').convert_alpha()
+		screen.blit(gun, sub_vecs(self.pos, self.camera_scroll))
 
 
 

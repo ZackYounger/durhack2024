@@ -55,7 +55,7 @@ def game_loop(screen):
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill((0, 0, 0))
+    screen.fill((51,204,255))
 
     player.update(dt, tick, keys)
 

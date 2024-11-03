@@ -123,10 +123,10 @@ class Level:
                         except:
                             pass
 
-                    if offset == [0, 0]:
-                        self.level_sprites_indices[y][x] = 44
-                    else:
-                        self.level_sprites_indices[y][x] = offset[0] + 4 * offset[1]
+                    #if offset == [0, 0]:
+                    #    self.level_sprites_indices[y][x] = 44
+                    
+                    self.level_sprites_indices[y][x] = 32 + offset[0] + 10 * offset[1]
 
                     if offset[1] == 2:
                         self.level_sprites_indices[y + 1][x] = offset[0] + 4 * (offset[1]+1)
@@ -145,8 +145,8 @@ class Level:
                                         (y - self.size / 2) * self.block_width]
                     draw_pos = [screen_pos[0] + 1 - camera_scroll[0] , screen_pos[1] + 1 - camera_scroll[1]]
 
-                    myNewSurface = pygame.Surface((self.size*2, self.size*2))
-                    if level_sprites_indices[y][x] <= 32:
+                    myNewSurface = pygame.Surface((self.size*2, self.size*2), pygame.SRCALPHA)
+                    if self.level_sprites_indices[y][x] < 32:
                         self.stone_sprites.blit(myNewSurface, self.level_sprites_indices[y][x], position=(0,0))
                     else:
                         self.grass_sprites.blit(myNewSurface, self.level_sprites_indices[y][x] - 32, position=(0,0))
