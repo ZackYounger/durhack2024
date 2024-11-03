@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-from helpers import add_vecs, multiply_vec_float, sub_vecs
+from Client.helpers import add_vecs, multiply_vec_float, sub_vecs
 
 
 def circle_surface(radius, color):
