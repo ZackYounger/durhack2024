@@ -14,7 +14,8 @@ collective_data = {
 
 host = "169.254.131.250"
 
-start_new_thread(start_server, (collective_data))
+def start_server():
+  start_new_thread(start_server, (collective_data))
 
 def waiting_screen():
   for i in collective_data:

@@ -4,7 +4,7 @@ from json import dumps, loads
 import sys
 
 
-def threaded_client(conn, collective_data, index):
+def threaded_client(conn, collective_data, index=None):
   conn.send(str.encode("True"))
   data = loads(conn.recv(2048 * 16).decode("utf-8"))
   collective_data["player" + str(data["player-id"])] = data

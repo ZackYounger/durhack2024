@@ -1,11 +1,12 @@
 import pygame
+from Network.network import Network
 
 from helpers import multiply_vec_float, add_vecs
 from laser import Laser
 
 class Player:
 
-	def __init__(self, screen_size, border_walls, block_width, playerID=0):
+	def __init__(self, screen_size, border_walls, block_width, host, playerID=0):
 		
 		self.playerID = playerID
 
@@ -38,11 +39,14 @@ class Player:
 		self.roll_speed = 50
 		self.roll_cooldown = 120
 		self.last_roll = 0
-
+    
 		self.laser_speed = 1
 		self.shoot_cooldown = 60
 		self.last_shoot = 0
 		self.lasers = []
+
+		self.network = Network(host, {"player-id": None, "pos": self.pos})
+
 
 	def update(self, dt, tick, keys):
 
