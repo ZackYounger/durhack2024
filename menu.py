@@ -14,9 +14,10 @@ pygame.display.set_caption("Main Menu")
 class MainMenu:
     # Game variables
     def __init__(self):
-        self.game_start = False
+        self.game_name = False
         self.menu_state = "main"
         self.server_address = ""
+        self.user_name1 = ""
 
         # Define fonts
         self.font = pygame.font.SysFont("arialblack", 40)
@@ -53,18 +54,19 @@ class MainMenu:
         screen.blit(img, (x, y))
 
     def main_menu(self):
-        # Game loop
+        # Game loop 
         run = True
         while run:
             screen.fill((52, 78, 91))
-
+             
+           
             # Check if game is started
-            if not self.game_start:
+            if self.game_name:
                 # Check menu state
                 if self.menu_state == "main":
                     # Draw pause screen buttons
                     if self.start_button.draw(screen):
-                        self.game_start = True
+                        self.game_name = True
                         print("Game started")
                     if self.options_button.draw(screen):
                         self.menu_state = "options"
@@ -95,7 +97,11 @@ class MainMenu:
                     rec_color = pygame.Color("black")
                     
                     for event in pygame.event.get() :
+                        if event.type == pygame.QUIT:
+                            run = False
+                        
                         if event.type == pygame.KEYDOWN :
+                            #if event.key == pygame.K_E
                             if event.key == pygame.K_BACKSPACE :
                                 self.server_address = self.server_address[:-1]
                             else :
@@ -117,8 +123,8 @@ class MainMenu:
                     player1_rect = pygame.Rect(600, 0, 150, 100) 
                     player1_server = gethostbyname(gethostname())
                     connect.init_server()
-                    
                     p1_serv = self.rec_font.render(player1_server, True, "white")
+                    
                     player2_rect = pygame.Rect(100, 100, 150, 100)  
                     player3_rect = pygame.Rect(200, 200, 150 , 100)
                     player4_rect = pygame.Rect(300, 300, 150, 100)      
@@ -129,15 +135,41 @@ class MainMenu:
                     pygame.draw.rect(screen, (255, 0, 255), player3_rect)
                     pygame.draw.rect(screen, (255, 0, 255), player4_rect)
                                     
-            
+                    
             else :
-                print("GAME START")
-            # Event handler
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
+                user_rect = pygame.Rect(SCREEN_WIDTH//2 - SCREEN_WIDTH//12, SCREEN_HEIGHT - (SCREEN_HEIGHT - 50), 144, 32)
+                user_rec_color = pygame.Color("white")
+                    
+                for event in pygame.event.get() :
+                    if event.type == pygame.QUIT :
+                        run = False
+                     
+                    if event.type == pygame.KEYDOWN :
+                        if event.key == pygame.K_RETURN and self.user_name1 != ""  : 
+                            self.game_name = True 
+                        
+                        if event.key == pygame.K_BACKSPACE :
+                            self.user_name1 = self.user_name1[:-1]
+                        else :
+                            self.user_name1 += event.unicode
+                    
+                user_text_surface = self.rec_font.render(self.user_name1, True, (255, 255, 255))
+                screen.blit(user_text_surface, (user_rect.x + 5, user_rect.y + 5))
+            
+                user1_render = self.rec_font.render("Enter your username : ", True, "white")
+                screen.blit(user1_render, (SCREEN_WIDTH//8, SCREEN_HEIGHT - (SCREEN_HEIGHT - 55)))
+            
+                pygame.draw.rect(screen, user_rec_color, user_rect, 5)
 
             pygame.display.update()
+            #     print("GAME START")
+            # # Event handler
+            # for event in pygame.event.get():
+            #     if event.type == pygame.QUIT:
+            #         run = False
+            
+            
+            
              
 xd = MainMenu()
 xd.main_menu()
