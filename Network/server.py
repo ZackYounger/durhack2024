@@ -8,15 +8,15 @@ def threaded_client(conn, collective_data, index=None):
   conn.send(str.encode("True"))
   data = loads(conn.recv(2048 * 16).decode("utf-8"))
   if index:
-    data["player-id"] = index[-1]
-  collective_data["player" + str(data["player-id"])] = data
+    data["playerID"] = index[-1]
+  collective_data["player" + str(data["playerID"])] = data
   reply = ""
   print(collective_data)
   while True:
     try:
       data = conn.recv(2048 * 16)
       reply = loads(data.decode("utf-8"))
-      collective_data["player" + str(reply["player-id"])] = reply
+      collective_data["player" + str(reply["playerID"])] = reply
       conn.sendall(str.encode(dumps(collective_data)))
     except:
       break

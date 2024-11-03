@@ -26,10 +26,9 @@ border_walls = level.get_border_walls()
 
 block_width = level.block_width
 
-connect.init_server()
 
 
-player = Player([screen_width, screen_height], border_walls, block_width, "169.254.131.250")
+player = Player([screen_width, screen_height], border_walls, block_width)
 
 
 

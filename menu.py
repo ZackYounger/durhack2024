@@ -1,5 +1,7 @@
 import pygame
 import button
+from Network import connect
+from Network.network import Network
 from socket import gethostbyname, gethostname 
 
 pygame.init()
@@ -46,6 +48,7 @@ class MainMenu:
         self.back_button = button.Button(332, 450, self.back_img, 1)
         self.join_button = button.Button(225, 40, self.f1_img, 1)
         self.create_button = button.Button(200, 375,self.f2_img, 1)
+
 
     def draw_text(self, text, font, text_col, x, y):
         img = font.render(text, True, text_col)
@@ -95,6 +98,10 @@ class MainMenu:
                     
                     for event in pygame.event.get() :
                         if event.type == pygame.KEYDOWN :
+                            if event.key:
+                                self.network = Network(self.server_address, {})
+                                if not self.network.connected:
+                                    
                             if event.key == pygame.K_BACKSPACE :
                                 self.server_address = self.server_address[:-1]
                             else :
@@ -115,11 +122,15 @@ class MainMenu:
                         
                     player1_rect = pygame.Rect(600, 0, 150, 100) 
                     player1_server = gethostbyname(gethostname())
+                    connect.init_server()
+                    
+                    p1_serv = self.rec_font.render(player1_server, True, "white")
                     player2_rect = pygame.Rect(100, 100, 150, 100)  
                     player3_rect = pygame.Rect(200, 200, 150 , 100)
                     player4_rect = pygame.Rect(300, 300, 150, 100)      
                         
                     pygame.draw.rect(screen, (255, 0, 255), player1_rect)
+                    screen.blit(p1_serv, (330, 0))
                     pygame.draw.rect(screen, (255, 0, 255), player2_rect)
                     pygame.draw.rect(screen, (255, 0, 255), player3_rect)
                     pygame.draw.rect(screen, (255, 0, 255), player4_rect)
