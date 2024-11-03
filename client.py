@@ -6,7 +6,6 @@ import Network.network as network
 
 from Client.player import Player
 from Client.levelManager import Level
-from menu import xd
 
 
 screen_width = 1080
@@ -30,7 +29,7 @@ def ping(data):
 
 def game_loop(screen):
 
-  n = network.Network(xd.server_address, connect.collective_data)
+  n = network.Network(connect.collective_data['addr'], connect.collective_data)
 
   level = Level()
   level.create_new_level(41)

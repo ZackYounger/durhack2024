@@ -90,10 +90,11 @@ class Player:
 
 		#check kill order
 		i = 0
-		if len(self.real_order) > i
+		if len(self.real_order) > i:
 			if self.kill_order[i] == self.real_order[i]:
 				i+=1
 				if i == self.numPlayers:
+					pass
 					#winn!!!
 			else:
 				self.real_order = []
@@ -204,6 +205,10 @@ class Player:
 	def take_damage(self, amount):
 		self.health -= self.laser_damage
 
+		#screenshake
+		amplitude = 3
+		self.screen_shake = multiply_vec_float([random.random(), random.random()], amplitude)
+
 
 
 	def draw(self, screen):	
@@ -211,15 +216,15 @@ class Player:
 		sprite = self.animationHandler.get_sprite(self.state, self.sprite_scaling)
 		sprite = pygame.transform.flip(sprite, self.flipped, False)
 
-		draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
-						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
+		draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0] + self.screen_shake[0],
+						 self.pos[1] - self.height/2 - self.camera_scroll[1] + self.screen_shake[1]]
 
 		screen.blit(sprite, draw_pos)
 
 		gun = pygame.transform.scale(self.gun, (self.gun.get_width()*2,self.gun.get_height()*2))
 		gun = pygame.transform.flip(gun, True, self.flipped)
-		draw_pos = [self.pos[0] - gun.get_width()/2 - self.camera_scroll[0],
-						 self.pos[1] - self.camera_scroll[1]]
+		draw_pos = [self.pos[0] - gun.get_width()/2 - self.camera_scroll[0] + self.screen_shake[0],
+						 self.pos[1] - self.camera_scroll[1] + self.screen_shake[1]]
 
 
 		gun2 = self.rot_center(gun, atan2(self.normal_mouse_dir[0],self.normal_mouse_dir[1]))

@@ -143,7 +143,7 @@ class Level:
 
                     screen_pos = [(x - self.size / 2) * self.block_width,
                                         (y - self.size / 2) * self.block_width]
-                    draw_pos = [screen_pos[0] + 1 - camera_scroll[0] , screen_pos[1] + 1 - camera_scroll[1]]
+                    draw_pos = [screen_pos[0] + 1 - camera_scroll[0] + self.screen_shake[0], screen_pos[1] + 1 - camera_scroll[1] + self.screen_shake[1]]
 
                     myNewSurface = pygame.Surface((self.size*2, self.size*2), pygame.SRCALPHA)
                     if self.level_sprites_indices[y][x] < 32:
