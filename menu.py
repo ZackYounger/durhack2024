@@ -101,7 +101,9 @@ class MainMenu:
                             if event.key:
                                 self.network = Network(self.server_address, {})
                                 if not self.network.connected:
-                                    
+                                    pass
+                                else:
+                                    pass
                             if event.key == pygame.K_BACKSPACE :
                                 self.server_address = self.server_address[:-1]
                             else :

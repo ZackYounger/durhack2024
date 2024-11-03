@@ -1,7 +1,6 @@
 import pygame
 import random
 
-from Network.network import Network
 
 from Client.laser import Laser
 from spritesheet import Spritesheet
