@@ -6,6 +6,7 @@ import Network.network as network
 
 from Client.player import Player
 from Client.levelManager import Level
+from menu import xd
 
 
 screen_width = 1080
@@ -27,8 +28,9 @@ def ping(data):
 
 
 
-
 def game_loop(screen):
+
+  n = network.Network(xd.server_address, connect.collective_data)
 
   level = Level()
   level.create_new_level(41)
@@ -62,7 +64,8 @@ def game_loop(screen):
     level.draw(screen, player.camera_scroll)
 
     player.draw(screen)
-
+    connect.collective_data = n.ping(connect.collective_data["player" + str(Player.playerID)])
+    print(connect.collective_data)
     ## Done after drawing everything to the screen
     pygame.display.flip()       
 

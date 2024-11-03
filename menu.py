@@ -1,9 +1,11 @@
 import pygame
 import button
 from Network import connect
+from _thread import *
 from json import dumps, loads
 from Network.network import Network
 from socket import gethostbyname, gethostname 
+import client
 
 start_server_once = [False]
 
@@ -14,6 +16,9 @@ SCREEN_WIDTH = 1080
 SCREEN_HEIGHT = 720
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Main Menu")
+
+
+
 
 class MainMenu:
     # Game variables
@@ -53,6 +58,17 @@ class MainMenu:
         self.join_button = button.Button(225 * (1080 / 800), 40 * (72 / 60), self.f1_img, 1)
         self.create_button = button.Button(200 * (1080 / 800), 375 * (72 / 60), self.f2_img, 1)
 
+    def check_whos_in(self):
+      def get_names():
+          connect.collective_data = self.network.ping(connect.collective_data[self.id])
+      while self.menu_state != "game":
+          start_new_thread(get_names, ())
+          
+    def start_game(self):
+      self.menu_state = "game"
+      client.game_loop(screen=screen)
+
+
     def main_menu(self):
         # Game loop 
         run = True
@@ -82,7 +98,7 @@ class MainMenu:
 
                             else:
                                 # connected, go to waiting page
-                                reply = self.network.ping({"empty": "name"})
+                                reply = self.network.ping({})
                                 self.id = reply["id"]
                                 connect.collective_data = reply["data"]
                                 self.menu_state = "create"
@@ -164,6 +180,8 @@ class MainMenu:
 
             # Update the display
             pygame.display.flip()
+
+
 
 # Initialize and start main menu
 xd = MainMenu()
