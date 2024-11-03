@@ -65,6 +65,7 @@ class Player:
 		self.kill_order = random.shuffle(other_players)
 
 
+
 	def update(self, dt, tick, keys):
 
 		#dt_const = dt * 60
@@ -151,13 +152,16 @@ class Player:
 				self.lasers.remove(laser)
 
 
+	def ping(self, data):
+		return self.network.ping(data)
+
 
 	def take_damage(self, amount):
 		print('OUCH! FUCK SHIT OOWWW THA TFUCKING HURTS')
 
 
 
-	def draw(self, screen):
+	def draw(self, screen):	
 		self.draw_pos = [self.pos[0] - self.width/2 - self.camera_scroll[0],
 						 self.pos[1] - self.height/2 - self.camera_scroll[1]]
 		pygame.draw.rect(screen, (255,255,0), [*self.draw_pos, self.width, self.height])

@@ -1,10 +1,11 @@
 import pygame
 import random
 
+import Network.connect as connect
+
 from Client.player import Player
 from Client.levelManager import Level
 
-import Network.connect as connect
 
 screen_width = 1080
 screen_height = 720
@@ -16,9 +17,11 @@ border_walls = level.get_border_walls()
 
 block_width = level.block_width
 
+connect.init_server()
+
+
 player = Player([screen_width, screen_height], border_walls, block_width, "169.254.131.250")
 
-connect.init_server()
 
 
 ## initialize pygame and create window

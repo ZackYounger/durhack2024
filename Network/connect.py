@@ -17,6 +17,8 @@ host = "169.254.131.250"
 def init_server():
   start_new_thread(start_server, (collective_data, ))
 
+  
+
 def waiting_screen():
   for i in collective_data:
     if not collective_data[i]:
