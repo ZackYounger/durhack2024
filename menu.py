@@ -37,7 +37,7 @@ class MainMenu:
         self.TEXT_COL = (255, 255, 255)
 
         # Load button images
-        #self.resume_img = pygame.image.load("Assets/Buttons/button_resume.png").convert_alpha()
+        self.resume_img = pygame.image.load("Assets/Buttons/button_resume.png").convert_alpha()
         self.options_img = pygame.image.load("Assets/Buttons/button_options.png").convert_alpha()
         self.quit_img = pygame.image.load("Assets/Buttons/button_quit.png").convert_alpha()
         self.video_img = pygame.image.load('Assets/Buttons/button_video.png').convert_alpha()
@@ -48,7 +48,7 @@ class MainMenu:
         self.create_img = pygame.image.load('Assets/Buttons/craete_button.png').convert_alpha()
 
         # Create button instances
-        #self.start_button = button.Button(304 * (1080 / 800), 125 * (72 / 60), self.resume_img, 1)
+        self.start_button = button.Button(310 * (1080 / 800), 60 * (72 / 60), self.resume_img, 1)
         self.options_button = button.Button(297 * (1080 / 800), 245 * (72 / 60), self.options_img, 1)
         self.quit_button = button.Button(325 * (1080 / 800), 450 * (72 / 60), self.quit_img, 1)
         self.video_button = button.Button(226 * (1080 / 800), 7 * (72 / 60), self.video_img, 1)
@@ -148,6 +148,8 @@ class MainMenu:
                 
                 elif self.menu_state == "create":
                     # Show created server IP address
+                    if self.start_button.draw(screen) :
+                        print("CALL FUNCTION")
                     
                     if self.back_button.draw(screen): 
                         self.menu_state = "main"
