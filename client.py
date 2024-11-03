@@ -18,7 +18,7 @@ block_width = level.block_width
 
 player = Player([screen_width, screen_height], border_walls, block_width, "169.254.131.250")
 
-connect.start_server()
+connect.init_server()
 
 
 ## initialize pygame and create window

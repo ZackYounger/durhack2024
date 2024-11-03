@@ -1,6 +1,6 @@
-import network
-from network import Network
-from server import start_server
+import Network.network
+from Network.network import Network
+from Network.server import start_server
 from time import sleep
 from _thread import *
 
@@ -14,8 +14,8 @@ collective_data = {
 
 host = "169.254.131.250"
 
-def start_server():
-  start_new_thread(start_server, (collective_data))
+def init_server():
+  start_new_thread(start_server, (collective_data, ))
 
 def waiting_screen():
   for i in collective_data:

@@ -1,8 +1,8 @@
 import pygame
 from Network.network import Network
 
-from helpers import multiply_vec_float, add_vecs
-from laser import Laser
+from Client.helpers import multiply_vec_float, add_vecs
+from Client.laser import Laser
 
 class Player:
 

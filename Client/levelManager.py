@@ -4,7 +4,7 @@ from random import choice
 from perlin_noise import PerlinNoise
 from time import time
 
-from helpers import add_vecs, multiply_vec_float
+from Client.helpers import add_vecs, multiply_vec_float
 
 class Level:
 
