@@ -1,5 +1,6 @@
 import pygame
 import button
+from socket import gethostbyname, gethostname 
 
 pygame.init()
 
@@ -24,13 +25,13 @@ class MainMenu:
         self.TEXT_COL = (255, 255, 255)
 
         # Load button images
-        self.resume_img = pygame.image.load("images/button_resume.png").convert_alpha()
-        self.options_img = pygame.image.load("images/button_options.png").convert_alpha()
-        self.quit_img = pygame.image.load("images/button_quit.png").convert_alpha()
-        self.video_img = pygame.image.load('images/button_video.png').convert_alpha()
-        self.audio_img = pygame.image.load('images/button_audio.png').convert_alpha()
-        self.keys_img = pygame.image.load('images/button_keys.png').convert_alpha()
-        self.back_img = pygame.image.load('images/button_back.png').convert_alpha()
+        self.resume_img = pygame.image.load("Assets/Buttons/button_resume.png").convert_alpha()
+        self.options_img = pygame.image.load("Assets/Buttons/button_options.png").convert_alpha()
+        self.quit_img = pygame.image.load("Assets/Buttons/button_quit.png").convert_alpha()
+        self.video_img = pygame.image.load('Assets/Buttons/button_video.png').convert_alpha()
+        self.audio_img = pygame.image.load('Assets/Buttons/button_audio.png').convert_alpha()
+        self.keys_img = pygame.image.load('Assets/Buttons/button_keys.png').convert_alpha()
+        self.back_img = pygame.image.load('Assets/Buttons/button_back.png').convert_alpha()
         self.f1_img = pygame.image.load('images/sq/x/f1.png').convert_alpha()
         self.f2_img = pygame.image.load('images/sq/x/f2.png').convert_alpha()
 
@@ -110,7 +111,10 @@ class MainMenu:
                 elif self.menu_state == "create" :
                     if self.back_button.draw(screen) : 
                         self.menu_state = "main"
+                        
+                        
                     player1_rect = pygame.Rect(600, 0, 150, 100) 
+                    player1_server = gethostbyname(gethostname())
                     player2_rect = pygame.Rect(100, 100, 150, 100)  
                     player3_rect = pygame.Rect(200, 200, 150 , 100)
                     player4_rect = pygame.Rect(300, 300, 150, 100)      
