@@ -1,6 +1,7 @@
 import pygame
 import button
 from Network import connect
+from _thread import *
 from json import dumps, loads
 from Network.network import Network
 from socket import gethostbyname, gethostname 
@@ -15,6 +16,9 @@ SCREEN_WIDTH = 1080
 SCREEN_HEIGHT = 720
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Main Menu")
+
+
+
 
 class MainMenu:
     # Game variables
@@ -54,6 +58,17 @@ class MainMenu:
         self.join_button = button.Button(250 * (1080 / 800), 125 * (72 / 60), self.join_img, 1)
         self.create_button = button.Button(250 * (1080 / 800), 350 * (72 / 60), self.create_img, 1)
 
+    def check_whos_in(self):
+      def get_names():
+          connect.collective_data = self.network.ping(connect.collective_data[self.id])
+      while self.menu_state != "game":
+          start_new_thread(get_names, ())
+          
+    def start_game(self):
+      self.menu_state = "game"
+      client.game_loop(screen=screen)
+
+
     def main_menu(self):
         # Game loop 
         run = True
@@ -83,11 +98,10 @@ class MainMenu:
 
                             else:
                                 # connected, go to waiting page
-                                reply = self.network.ping({"empty": "name"})
+                                reply = self.network.ping({})
                                 self.id = reply["id"]
                                 connect.collective_data = reply["data"]
                                 self.menu_state = "create"
-                                client.game_loop(screen=screen)
                         if event.key == pygame.K_BACKSPACE:
                             self.server_address = self.server_address[:-1]
                         else:
@@ -145,6 +159,7 @@ class MainMenu:
                       start_server_once[0] = True
                       if self.server_address == "":
                         self.server_address = player1_server
+                      connect.collective_data['addr'] = player1_server
                       self.network = Network(self.server_address, {})
                     p1_serv = self.rec_font.render(player1_server, True, (255, 255, 255))
                     name_display = self.rec_font.render(self.user_name1, True, (255, 255, 255))
