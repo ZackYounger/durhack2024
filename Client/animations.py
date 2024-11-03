@@ -7,11 +7,15 @@ class AnimationHandler:
 
 		self.sheets = {}
 
+		states = ['idle', 'move', 'dash']
+		frames = [10,10,5]
+
 		dir_name = f'Assets/sprites/male/{sprite_name}/'
 
-		sprite_sheet_image = pygame.image.load(dir_name + 'base/idle.png').convert_alpha()
-		idle_sheet = SpriteSheet(sprite_sheet_image)
-		self.sheets['idle'] = idle_sheet
+		for i, state in enumerate(states):
+			sprite_sheet_image = pygame.image.load(dir_name + f'base/{state}.png')#, pygame.SRCALPHA)
+			sheet = SpriteSheet(sprite_sheet_image)
+			self.sheets[state] = {'sheet' : sheet, 'frames' : frames[i]}
 
 		self.frame_index = 0
 		self.current_state_frame = 0
@@ -27,12 +31,11 @@ class AnimationHandler:
 			self.frame_index = 0
 
 		else:
-			if self.current_state_frame == self.frame_time:
-				self.frame_index += 1
+			if self.current_state_frame == self.sheets[state]['frames']:
 				self.current_state_frame = 0
-			else:
-				self.current_state_frame += 1
+				self.frame_index += 1
+
 
 		self.last_state = state
 
-		return self.sheets[state].get_image(self.frame_index, scale)
+		return self.sheets[state]['sheet'].get_image(self.frame_index, scale)
