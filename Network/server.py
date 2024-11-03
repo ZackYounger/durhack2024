@@ -11,15 +11,18 @@ def threaded_client(conn, collective_data, index=None):
     data["playerID"] = index[-1]
   collective_data["player" + str(data["playerID"])] = data
   reply = ""
-  print(collective_data)
   while True:
     try:
       data = conn.recv(2048 * 16)
       reply = loads(data.decode("utf-8"))
-      collective_data["player" + str(reply["playerID"])] = reply
-      conn.sendall(str.encode(dumps(collective_data)))
+      if index:
+        conn.sendall(str.encode(dumps({"id": index, "data": collective_data})))
+        index = None
+      else:
+        collective_data["player" + str(reply["playerID"])] = reply
+        conn.sendall(str.encode(dumps(collective_data)))
     except:
-      break
+      pass
 
   conn.close()
 
@@ -30,20 +33,18 @@ def start_server(collective_data):
 
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-
   try:
     s.bind((server, port))
+    s.listen(2)
   except socket.error as e:
     str(e)
 
-  s.listen(2)
   print("Waiting for a connection, Server Started")
     
   while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
     for i in collective_data:
-      print(i, collective_data[i])
       if not collective_data[i]:
         index = i
         break
