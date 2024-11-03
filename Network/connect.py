@@ -1,3 +1,4 @@
+import socket
 import Network.network
 from Network.network import Network
 from Network.server import start_server
@@ -12,14 +13,23 @@ collective_data = {
 }
 
 
-host = "169.254.131.250"
 
 def init_server():
   start_new_thread(start_server, (collective_data, ))
 
-  
+def game_server():
+  server = socket.gethostbyname(socket.gethostname())
+  port = 8000
 
-def waiting_screen():
-  for i in collective_data:
-    if not collective_data[i]:
-      return 4 - int(i[-1])
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+  try:
+    s.bind((server, port))
+    s.listen(2)
+  except socket.error as e:
+    str(e)
+
+  while True:
+    conn, addr = s.accept()
+
+    start_new_thread(game_server, (conn, collective_data))

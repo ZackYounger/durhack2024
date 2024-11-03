@@ -4,9 +4,9 @@ from server import start_server
 from time import sleep
 from _thread import *
 
-host = "169.254.131.250"
+host = "192.168.122.1"
 
-start_new_thread(start_server, ())
+start_new_thread(start_server, ({}, ))
 
 first = Network(host, {"player-id": 0, "x": 10, "y": 5})
 second = Network(host, {"player-id": 1, "x": 25, "y": 5})
