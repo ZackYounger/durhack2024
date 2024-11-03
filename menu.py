@@ -141,7 +141,7 @@ class MainMenu:
             
             else :
                 print("GAME START")
-                client.game_loop()
+                client.game_loop(screen=screen)
             # Event handler
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

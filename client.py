@@ -30,11 +30,14 @@ block_width = level.block_width
 
 
 
-player = Player([screen_width, screen_height], border_walls, block_width)
 
 
 
 def game_loop(screen):
+  player = Player([screen_width, screen_height], border_walls, block_width)
+
+  clock = pygame.time.Clock()     ## For syncing the FPS
+
   ## Game loop
   running = True
   dt = 0
@@ -63,10 +66,8 @@ def game_loop(screen):
 
   pygame.quit()
 
-
 if __name__ == "__main__":
-
   screen = pygame.display.set_mode((screen_width, screen_height))
   pygame.display.set_caption("Hello There")
-  clock = pygame.time.Clock()     ## For syncing the FPS
+  
   game_loop(screen)
