@@ -39,10 +39,11 @@ class Player:
 		self.acc_scaling = 1
 
 		
+		self.health = 100
 		self.health_bar = pygame.image.load("Assets/HealthBarPLEASE.png").convert_alpha()
 		self.health_scale = 3*self.health_bar.get_width()
 		self.scaled_bar = pygame.transform.scale(self.health_bar, (self.health_scale, 2*self.health_bar.get_height()))
-		self.animationHandler = AnimationHandler('loki')
+		self.animationHandler = AnimationHandler(playerID)
 
 		self.camera_scroll_speed = 20
 		self.camera_scroll = [0, 0]
@@ -70,19 +71,20 @@ class Player:
 		self.last_shoot = 0
 		self.laser_damage = 20
 		self.lasers = []
+		self.lasers_to_send = []
 
 		self.gun = pygame.image.load('Assets/sprites/gun.png').convert_alpha()
 		self._base_sprite = pygame.image.load('Assets/sprites/gun.png').convert_alpha()
 
 		self.numPlayers = numPlayers
 
-		other_players = [i for i in numPlayers]
+		other_players = [i for i in range(numPlayers)]
 		other_players.remove(playerID)
 		self.kill_order = random.shuffle(other_players)
 
 		self.real_order = []
 
-
+		self.screen_shake = [0, 0]
 
 
 
@@ -130,9 +132,8 @@ class Player:
 		if keys[self.controls["shoot"]]:
 			if tick - self.last_shoot > self.shoot_cooldown:
 
-				self.lasers.append( Laser(self.pos, self.normal_mouse_dir, self.playerID) )
-
 				self.last_shoot = tick
+				self.create_laser(self.pos, self.normal_mouse_dir)
 
 
 
@@ -202,6 +203,12 @@ class Player:
 			self.state = 'idle'
 
 
+	def create_laser(self, pos, dir):
+		self.lasers.append( Laser(self.pos, self.normal_mouse_dir, self.playerID) )
+		self.lasers_to_send.append([self.pos, self.dir])
+
+
+
 	def take_damage(self, amount):
 		self.health -= self.laser_damage
 
@@ -242,7 +249,10 @@ class Player:
 						 self.pos[1] + self.height/2 + 5 - self.camera_scroll[1]]
 
 
+		#TO CHANGE DNAILEA SI A BIUTT FUCK
+		pygame.draw.rect(screen, (255,0 ,0), [*self.health_draw_pos, self.scaled_bar.get_width(), self.scaled_bar.get_height()])
 		screen.blit(self.scaled_bar, self.health_draw_pos)
+
 
 		#I shouldnt be doing this here but I am loosing my will to live
 		for laser in self.lasers:

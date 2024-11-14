@@ -41,12 +41,12 @@ class Level:
                 self.level[temp_loc[1]][temp_loc[0]] = 0
 
 
-    def create_new_level(self, size):
+    def create_new_level(self, size, seed):
 
         level_openness = .05
         freq = 10
 
-        seed = time()
+        #seed = time()
 
         #make size odd
         size = size if size % 2 == 1 else size + 1
@@ -134,7 +134,7 @@ class Level:
 
 
 
-    def draw(self, screen, camera_scroll):
+    def draw(self, screen, camera_scroll, screen_shake):
         for y in range(len(self.level)):
             for x in range(len(self.level[0])):
 
@@ -143,7 +143,7 @@ class Level:
 
                     screen_pos = [(x - self.size / 2) * self.block_width,
                                         (y - self.size / 2) * self.block_width]
-                    draw_pos = [screen_pos[0] + 1 - camera_scroll[0] + self.screen_shake[0], screen_pos[1] + 1 - camera_scroll[1] + self.screen_shake[1]]
+                    draw_pos = [screen_pos[0] + 1 - camera_scroll[0] + screen_shake[0], screen_pos[1] + 1 - camera_scroll[1] + screen_shake[1]]
 
                     myNewSurface = pygame.Surface((self.size*2, self.size*2), pygame.SRCALPHA)
                     if self.level_sprites_indices[y][x] < 32:
