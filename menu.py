@@ -63,6 +63,7 @@ class MainMenu:
           connect.collective_data = self.network.ping(connect.collective_data[self.id])
       while self.menu_state != "game":
           start_new_thread(get_names, ())
+      self.start_game()
           
     def start_game(self):
       self.menu_state = "game"
@@ -103,11 +104,11 @@ class MainMenu:
                                 connect.collective_data = reply["data"]
                                 connect.collective_data[self.id]["ip"] = gethostbyname(gethostname())
                                 self.menu_state = "create"
+                                self.check_whos_in()
                         if event.key == pygame.K_BACKSPACE:
                             self.server_address = self.server_address[:-1]
                         else:
                             self.server_address += event.unicode
-
             # Draw based on the menu state
             if self.game_name:
                 # Handle menu states
@@ -150,7 +151,9 @@ class MainMenu:
                 elif self.menu_state == "create":
                     # Show created server IP address
                     if self.start_button.draw(screen) :
-                        print("CALL FUNCTION")
+                        self.menu_state = "game"
+                        connect.collective_data["game_state"]["state"] = "game"
+                        self.network.ping(connect.collective_data["game_state"]["state"])
                     
                     if self.back_button.draw(screen): 
                         self.menu_state = "main"
@@ -162,9 +165,10 @@ class MainMenu:
                       start_server_once[0] = True
                       if self.server_address == "":
                         self.server_address = player1_server
-                      connect.collective_data['addr'] = player1_server
+                      connect.collective_data["player0"]['addr'] = player1_server
                       connect.collective_data["player0"]['ip'] = player1_server
                       self.network = Network(self.server_address, {})
+                      self.check_whos_in()
                     p1_serv = self.rec_font.render(player1_server, True, (255, 255, 255))
                     name_display = self.rec_font.render(self.user_name1, True, (255, 255, 255))
                     

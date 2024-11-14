@@ -22,7 +22,7 @@ dulled_player_colours = [[j/2 for j in colour] for colour in player_colours]
 
 class Player:
 
-	def __init__(self, screen_size, border_walls, block_width, numPlayers, playerID=0):
+	def __init__(self, screen_size, border_walls, block_width, numPlayers=[], playerID=0):
 		
 		self.playerID = playerID
 
@@ -247,21 +247,6 @@ class Player:
 		#I shouldnt be doing this here but I am loosing my will to live
 		for laser in self.lasers:
 			laser.draw(screen, self.camera_scroll, dulled_player_colours)
-
-
-
-	def rot_center(self, image, angle):
-		try:
-		    """rotate an image while keeping its center and size"""
-		    orig_rect = image.get_rect()
-		    rot_image = pygame.transform.rotate(image, angle / 3.1415 * 180 - 90 )#math.degrees(angle))
-		    rot_rect = orig_rect.copy()
-		    rot_rect.center = rot_image.get_rect().center
-		    rot_image = rot_image.subsurface(rot_rect).copy()
-		    return rot_image
-		except:
-		   	pass
-
 
 
 

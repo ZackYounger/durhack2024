@@ -30,7 +30,7 @@ def ping(data):
 
 def game_loop(screen):
 
-  n = network.Network(connect.collective_data['addr'], connect.collective_data)
+  #n = network.Network(connect.collective_data["player0"]['addr'], connect.collective_data)
 
   level = Level()
   level.create_new_level(41)

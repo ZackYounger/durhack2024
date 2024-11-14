@@ -10,7 +10,7 @@ collective_data = {
   "player1" : {},
   "player2" : {},
   "player3" : {},
-  "game_state": "",
+  "game_state": {"state": ""},
 }
 
 
